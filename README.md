@@ -38,11 +38,13 @@ You can run Servarr apps individually or use Full Service to run them all at onc
 
 ```console
 > python3 -m venv .venv
-> source .venv/bin/activate
+> source .venv/bin/activate 
 > python3 -m pip install -r requirements.txt
 ```
 
 **NOTE:** The `.venv` directory and its subdirectories are excluded in `.gitignore`.
+
+`source .venv/bin/activate` This needs to be run
 
 ### Folder Structure
 
@@ -83,14 +85,18 @@ Be sure to:
 
 Run the following at the root level of this project to start the app:
 
+```shell
+source .venv/bin/activate
 ```
+
+```shell
 python3 main.py
 ```
 
 or create an alias like this and run it:
 
 ```shell
-alias torrents="cd ~/projects/torrent_fiesta && python3 main.py"
+alias torrents="cd ~/projects/torrent-fiesta && source .venv/bin/activate && python3 main.py"
 ```
 
 Either of these wll launch the app and attempt to start Docker and Transmission if they is not running, after which a CLI menu is presented.
