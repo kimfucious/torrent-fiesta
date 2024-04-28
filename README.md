@@ -111,9 +111,9 @@ This should be fairly intuitive, but here's a few clarifications:
 
 -   Read the [Prowlarr Quick Start Guide](https://wiki.servarr.com/prowlarr/quick-start-guide)
 -   Set up some feeds (these are suggestions):
-    -   Try 1337x and/or YTS for Movies
-    -   Try EZTV for TV Shows
-    -   Try [MAM](#helpful-links) for Books (private tracker)
+    -   1337x and/or YTS for Movies
+    -   EZTV for TV Shows
+    -   [MAM](#helpful-links) for Books (private tracker)
 -   Setup Radarr, Readarr, and Sonarr under Settings => Apps
     -   Be sure to use your local IP address, not `localhost` for Server fields
     -   Get the API keys from each app individually.
