@@ -2,7 +2,7 @@
 
 This is a project to simplify running [Servarr](https://wiki.servarr.com/) apps in Docker containers.
 
-All of this was created to run on a Mac and the documentation herein is macOS centric. If you're on another platform, your mileage may vary and some things just won't work.
+All of this was created to run on a Mac and the documentation herein is macOS centric. If you're on another platform, some things just won't work.
 
 At present, [Lidarr](https://wiki.servarr.com/en/lidarr) and [Whisparr](https://wiki.servarr.com/en/whisparr) are not implemented.
 
@@ -23,7 +23,7 @@ This project assumes the use of [Transmission](https://transmissionbt.com/) as a
 
 ### Docker
 
--   If not already installed, install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
+-   If not already installed, install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/).
 
 Docker is used to run the Servarr apps in containers. The Compose files are located in the docker directory at the root level of this project.
 
@@ -77,11 +77,11 @@ Be sure to:
 -   Use what's appropriate for your environment and update the `volumes` sections in the Docker compose files in the `docker/xarr` directory accordingly.
 -   Update the `app_root_on_disk` value in `global.py` to match your environment.
 
-**NOTE:** The Servarr apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below.
+**NOTE:** The Servarr apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to worry about `PUID` and `PGID` settings in the Docker Compose files.
 
 ## To Start
 
-Run the following at the root level of this project:
+Run the following at the root level of this project to start the app:
 
 ```
 python3 main.py
@@ -99,17 +99,18 @@ Either of these wll launch the app and attempt to start Docker and Transmission 
 
 This should be fairly intuitive, but here's a few clarifications:
 
--   You can run individual Servarr apps or select `Full Service` to run them all.
+-   You can run individual Servarr apps or select `Full Service` to run them all at once.
 -   When you quit the app, it should gracefully shut down.
--   If you break out of the app with `CTRL+C` (or the app crashes) the Docker containers will remain running. This _may_ cause issues when trying to run the app again; however, there's some error handling in the app to detect and recover from most situations.
--   If there's a scenario that isn't handled, you'll need to stop the running Docker Combine project manually.
+-   If you break out of the app with `CTRL+C` (or the app crashes) the Docker Compose project and its containers will continue running.
+-   This _may_ cause issues when trying to run the app again; however, there's some error handling in the app to detect and recover from most situations.
+-   If there's a scenario that isn't handled, you'll need to stop the running Docker Compose project and manually remove it.
 
 ## Servarr Apps
 
 ### Prowlarr
 
 -   Read the [Prowlarr Quick Start Guide](https://wiki.servarr.com/prowlarr/quick-start-guide)
--   Set up some feeds:
+-   Set up some feeds (these are suggestions):
     -   Try 1337x and/or YTS for Movies
     -   Try EZTV for TV Shows
     -   Try [MAM](#helpful-links) for Books (private tracker)
@@ -227,10 +228,10 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 -   Not sure if this is true yet, but it appears that if single Servarr service is chosen (e.g. Sonarr), rather than Full Service, Prowlarr will fail due to inability to connect to non-started Apps. This will affect the chosen app and cause searches to fail.
     -   Workaround 1: Separate Prowlarr configs
     -   Workaround 2: Get rid of individual Servarr options and only use Full Service
--   Auto selected downloads will often have very few seeders. 
-    - Apparently some indexers lie about how many seeders there are. 
-    - Interactive search can sometimes yield better results. 
-    - Setting the Minimum Seeders value in Prowler => Apps => Sync Profiles may yield better results.
+-   Auto selected downloads will often have very few seeders.
+    -   Apparently some indexers lie about how many seeders there are.
+    -   Interactive search can sometimes yield better results.
+    -   Setting the Minimum Seeders value in Prowler => Apps => Sync Profiles may yield better results.
 
 ### Readarr
 
