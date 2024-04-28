@@ -1,0 +1,15 @@
+services:
+    prowlarr:
+        image: lscr.io/linuxserver/prowlarr:latest
+        container_name: prowlarr
+        environment:
+            - PUID=1000
+            - PGID=1000
+            # - PUID=502 # Use a User ID that has permissions on the volumes below
+            # - PGID=20 # Use a Group ID that has permissions on the volumes below
+            - TZ=Asia/Bangkok
+        volumes:
+            - /Volumes/Pteri/torrent_fiesta/prowlarr/config:/config
+        ports:
+            - 9696:9696
+        restart: unless-stopped
