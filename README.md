@@ -29,12 +29,14 @@ Docker is used to run the Servarr apps in containers. The Compose files are loca
 
 The app will select the correct files to use to run compose up/down commands based on CLI Menu selections.
 
-You can run Servarr apps individually or use Full Service to run them all at once. If you don't want a specific Servarr app to run in full service, edit the `full-service.compose.yaml` file, commenting out or deleting the service you do not wish to use.
+You can run Servarr apps individually or select `Full Service` to run them all at once. 
+
+If you don't want a specific Servarr app to run in full service, edit the `full-service.compose.yaml` file, commenting out or deleting the service you do not wish to use.
 
 ### Python
 
 -   Install Python 3 and pip (I use [Homebrew](https://docs.brew.sh/Homebrew-and-Python)).
--   In terminal, navigate to the root of this project and run the following commands:
+-   In terminal, navigate to the root of this project and run the following commands to install dependencies in an isolated environment:
 
 ```console
 > python3 -m venv .venv
@@ -43,8 +45,6 @@ You can run Servarr apps individually or use Full Service to run them all at onc
 ```
 
 **NOTE:** The `.venv` directory and its subdirectories are excluded in `.gitignore`.
-
-`source .venv/bin/activate` This needs to be run
 
 ### Folder Structure
 
@@ -79,7 +79,7 @@ Be sure to:
 -   Use what's appropriate for your environment and update the `volumes` sections in the Docker compose files in the `docker/xarr` directory accordingly.
 -   Update the `app_root_on_disk` value in `global.py` to match your environment.
 
-**NOTE:** The Servarr apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to worry about `PUID` and `PGID` settings in the Docker Compose files.
+**NOTE:** The Servarr apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to fiddle with `PUID`, `PGID`, and `UNMASK` settings in the Docker Compose files.
 
 ## To Start
 
@@ -230,21 +230,21 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 
 ### General
 
--   Opening Media locations does not bring Finder to the foreground, unless a window is already opened to the path and it has been minimized (I think that's the case). Not a big deal, but weird.
--   Not sure if this is true yet, but it appears that if single Servarr service is chosen (e.g. Sonarr), rather than Full Service, Prowlarr will fail due to inability to connect to non-started Apps. This will affect the chosen app and cause searches to fail.
-    -   Workaround 1: Separate Prowlarr configs
-    -   Workaround 2: Get rid of individual Servarr options and only use Full Service
 -   Auto selected downloads will often have very few seeders.
     -   Apparently some indexers lie about how many seeders there are.
     -   Interactive search can sometimes yield better results.
     -   Setting the Minimum Seeders value in Prowler => Apps => Sync Profiles may yield better results.
+-   Opening Media locations does not bring Finder to the foreground, unless a window is already opened to the path and it has been minimized (I think that's the case). Not a big deal, but weird.
+-   Not sure if this is true yet, but it appears that if single Servarr service is chosen (e.g. Sonarr), rather than Full Service, Prowlarr will fail due to inability to connect to non-started Apps. This will affect the chosen app and cause searches to fail.
+    -   Workaround 1: Separate Prowlarr configs
+    -   Workaround 2: Get rid of individual Servarr options and only use Full Service
 
 ### Readarr
 
 -   Does not work very well using torrent trackers.
 -   Prolly need to setup Usenet tracker for ebooks, as torrents do not seem to source well.
--   [MyAnonamouse](https://www.myanonamouse.net/) is a private tracker that requires an invite, which may improve things.
--   [Anna's Archive](https://www.myanonamouse.net/) is an alternative source for ebooks, but does not work with Readarr
+-   [MyAnonamouse](https://www.myanonamouse.net/) is a private tracker that requires an invite, which may improve things for torrents.
+-   [Anna's Archive](https://www.myanonamouse.net/) is an alternative source for ebooks, but does not work with Readarr.
 
 ## Documentation
 
