@@ -1,5 +1,6 @@
-.venv/
 __pycache__/
+.DS_Store
+.venv/
 *.pyc
 *.pyo
-.DS_Store
+/docker/vpn/secrets/vpn*
