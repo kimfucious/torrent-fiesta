@@ -1,0 +1,17 @@
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Bangkok
+    volumes:
+      # - /path/to/downloads:/downloads #optional
+      # - /path/to/incomplete/downloads:/incomplete-downloads #optional
+      - /Volumes/Pteri/torrent_fiesta/sabnzbd/config:/config
+      - /Volumes/Pteri/torrent_fiesta/data:/data
+      - /Volumes/Pteri/torrent_fiesta/data/usenet:/data/usenet
+    ports:
+      - 8080:8080
+    restart: unless-stopped

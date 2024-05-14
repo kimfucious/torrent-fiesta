@@ -14,7 +14,9 @@ While this project could be taken further to integrate with a media server (e.g.
 
 This project assumes the use of [Transmission](https://transmissionbt.com/) as a Bittorrent client, but using something else should not be that hard to do.
 
-**!!! WARNING !!!:** Encapsulation of network traffic with a VPN is not implemented (yet), running this project will probably get you into trouble with your ISP and possibly other entities in most countries.
+Same goes for SABnzbd[https://sabnzbd.org/], which this project uses as a Usenet newsreader.
+
+**!!! WARNING !!!:** Encapsulation of network traffic with a VPN is not implemented (yet), running this project without a pushing your Bittorrent and UseNet traffic through a VPN will probably get you into trouble with your ISP and possibly other entities in most countries.
 
 ## Prerequisites
 
@@ -25,13 +27,13 @@ This project assumes the use of [Transmission](https://transmissionbt.com/) as a
 
 -   If not already installed, install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/).
 
-Docker is used to run the Servarr apps in containers. The Compose files are located in the docker directory at the root level of this project.
+Docker is used to run the Servarr and SABnzbd apps in containers. The Compose files are located in the docker directory at the root level of this project.
 
 The app will select the correct files to use to run compose up/down commands based on CLI Menu selections.
 
-You can run Servarr apps individually or select `Full Service` to run them all at once. 
+You can run Servarr apps individually or select `Full Service` to run them all at once.
 
-If you don't want a specific Servarr app to run in full service, edit the `full-service.compose.yaml` file, commenting out or deleting the service you do not wish to use.
+If you don't want a specific Servarr app to run in Full Service, edit the `/docker/services/full_service/compose.yaml` file, commenting out or deleting the service(s) you do not wish to use.  You'll need to edit the `full_service_options` dictionary in `menu.py` to remove services from the [CLI Menu](#the-cli-menu).
 
 ### Python
 
@@ -40,7 +42,7 @@ If you don't want a specific Servarr app to run in full service, edit the `full-
 
 ```console
 > python3 -m venv .venv
-> source .venv/bin/activate 
+> source .venv/bin/activate
 > python3 -m pip install -r requirements.txt
 ```
 
@@ -48,87 +50,158 @@ If you don't want a specific Servarr app to run in full service, edit the `full-
 
 ### Folder Structure
 
+This is one of the more confusing things when getting started.  
+
+- Apps rely on `Download Clients` (e.g. Bittorrent/Transmission, Usenet/SABnzbs) to download files.
+- Download Clients can be configured to place in-progress (i.e. incomplete) downloads in a particular directory.  
+    - For Transmission this is done in the Transmission app under Settings => Transfers => Adding => Keep incomplete file in.  Servarr apps don't much care about this setting, so it's not super important where this is. 
+
 Create a folder structure like this on your local machine:
 
 ```shell
-    ├── data
-    │   ├── media # Servarr apps put imported files here
-    │   │   ├── books # readarr
-    │   │   ├── movies # radarr
-    │   │   └── tv # sonarr
-    │   └── torrents # Bittorrent client will put completed downloads here
-    │       ├── books
-    │       ├── movies
-    │       └── tv
-    ├── prowlarr
-    │   ├── config
-    ├── radarr
-    │   └── config
-    ├── readarr
-    │   └── config
-    └── sonarr
-        └── config
+.
+├── data
+│   ├── media # Servarr apps import files to here
+│   │   ├── books # Readarr
+│   │   ├── movies # Radarr
+│   │   ├── music # Lidarr
+│   │   └── tv # Sonarr
+│   ├── torrents # Bittorrent client will put completed downloads here
+│   │   ├── books
+│   │   ├── movies
+│   │   ├── music
+│   │   └── tv
+│   └── usenet
+│       ├── complete # Usenet client will put completed downloads here
+│       │   ├── books
+│       │   ├── movies
+│       │   ├── music
+│       │   └── tv
+│       ├── incomplete # Usenet client will put incomplete downloads here
+│       └── watch # Usenet client will watch this for manually downloaded NZBs
+│       │   ├── books # Named directories here match categories in SABnzbd
+│       │   ├── movies
+│       │   ├── music
+│       │   └── tv
+├── prowlarr
+│   └── config
+├── radarr
+│   └── config
+├── readarr
+│   └── config
+├── sabnzbd
+│   └── config
+├── sonarr
+│   └── config
+└── vpn # Not implemented yet
+    └── config
 ```
 
-I have this entire structure in a directory called `torrent_fiesta` on `/Volumes/Pteri`.
+I have this structure in a directory called `torrent_fiesta` on `/Volumes/Pteri`.
 
 `/Volumes/Pteri` is a USB attached drive on _my machine_.
 
 Be sure to:
 
--   Use what's appropriate for your environment and update the `volumes` sections in the Docker compose files in the `docker/xarr` directory accordingly.
--   Update the `app_root_on_disk` value in `global.py` to match your environment.
+1.   Use what's appropriate for your environment and update the `volumes` sections in the Docker compose files in the `docker/xarr` and `docker/nzb` directories accordingly.
+2.   Update the `app_root_on_disk` value in `global.py` to match your environment.
 
-**NOTE:** The Servarr apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to fiddle with `PUID`, `PGID`, and `UNMASK` settings in the Docker Compose files.
+**NOTE:** The apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to fiddle with `PUID`, `PGID`, and `UNMASK` settings in the Docker Compose files.
 
 ## To Start
 
-Run the following at the root level of this project to start the app:
+Run the following **at the root level** of this project to start the app:
 
 ```shell
 source .venv/bin/activate
 ```
 
+**NOTE:** This needs to be run to activate the environment setup in [Python](#python) in any new shell instance.
+
 ```shell
 python3 main.py
 ```
 
-or create an alias like this and run it:
+or&mdash;better&mdash;create an alias like this and run it:
 
 ```shell
-alias torrents="cd ~/projects/torrent-fiesta && source .venv/bin/activate && python3 main.py"
+alias tfiesta="cd ~/projects/torrent-fiesta && source .venv/bin/activate && python3 main.py"
 ```
 
-Either of these wll launch the app and attempt to start Docker and Transmission if they is not running, after which a CLI menu is presented.
+Either of these wll launch the app and attempt to start Docker and Transmission if they are not running, after which the CLI menu is presented.
 
 ## The CLI Menu
 
 This should be fairly intuitive, but here's a few clarifications:
 
--   You can run individual Servarr apps or select `Full Service` to run them all at once.
--   When you quit the app, it should gracefully shut down.
--   If you break out of the app with `CTRL+C` (or the app crashes) the Docker Compose project and its containers will continue running.
--   This _may_ cause issues when trying to run the app again; however, there's some error handling in the app to detect and recover from most situations.
+-   You can run individual Servarr apps (e.g. TV Shows/Sonar) or select `Full Service` to run them all at once.
+-   All apps run in individual containers, including [Prowlarr](#prowlarr-setup) and [SABnzbd](#sabnzbs).
+-   When you quit Torrent Fiesta, it should gracefully shut down all Docker containers.
+-   If you break out of Torrent Fiesta with `CTRL+C` (or the app crashes) the Docker Compose project and its containers will continue running.
+-   This _may_ cause issues when trying to run Torrent Fiesta again; however, there's some error handling to detect and recover from most situations.
 -   If there's a scenario that isn't handled, you'll need to stop the running Docker Compose project and manually remove it.
+
+## Download Clients
+
+### Transmission
+
+At present, this project is setup to use Transmission installed locally on your machine (not in a Docker container).
+
+They only tricky thing is when using Readarr.
+
+### SABnzbs
+
+SABnzbs is configured to run in a Docker container when selecting Books, Movies, TV, and Full Service in the [CLI Menu](#the-cli-menu).
+
+Once that container is running, the SABnzbs UI can be reached at [http://localhost:8080](http://localhost:8080)
+
+#### Setup
+
+1. Click on the gear icon, then General
+2. Make note of the API Key under security. You'll need that for [Prowlarr](#prowlarr-setup)
+3. Click on Folders
+4. Use `/data/usenet/incomplete` for Temporary Download Folder
+5. Use `/data/usenet/complete` for Completed Download Folder
+6. Use `/data/usenet/watch` for Watched Folder
+7. Save your changes
+8. Click on Categories
+9. Add a new category for `books`
+10. Add a new category for `redarr`
+11. Leave the other categories intact.
+
+## Usenet
+
+-   You'll need a Usenet provider. These cost money (not a lot). Try [NewsDemon](https://members.newsdemon.com/?ref=12154258).
+-   Once signed up, you will need the the following for [SABnzbd](#sabnzbs)
+    -   username
+    -   password
+    -   server (e.g. news.newsdemon.com)
 
 ## Servarr Apps
 
-### Prowlarr
+### Prowlarr Setup
 
 -   Read the [Prowlarr Quick Start Guide](https://wiki.servarr.com/prowlarr/quick-start-guide)
--   Set up some feeds (these are suggestions):
+-   Read the [Usenet](#usenet) and [SABnzbs](#sabnzbs) sections if you intend to use Usenet
+-   Set up some torrent feeds (these are suggestions):
     -   1337x and/or YTS for Movies
     -   EZTV for TV Shows
     -   [MAM](#helpful-links) for Books (private tracker)
+-   Set up some NZB feeds (these are suggestions due to easy registration):
+    -   [NZBFinder](https://nzbfinder.ws/register?ref=317367)
+    -   [NZBGeek](https://nzbgeek.info)
+    -   [NZBNoob](https://www.nzbnoob.com)
+
+NZB trackers are mostly--if not all--private. You need to register with them to use them.
+Each NAB indexer you add to Prowlarr will need an API Key provided once you sign in.
+
 -   Setup Radarr, Readarr, and Sonarr under Settings => Apps
-    -   Be sure to use your local IP address, not `localhost` for Server fields
+    -   Be sure to use your local IP address, not `localhost`, for Server fields
     -   Get the API keys from each app individually.
     -   Update Sync Categories according to your needs.
 -   Edit the Standard Sync Profile or Create New
 -   Test All Apps
 -   Sync App Indexes
-
-The above is for Torrents only. Docs for Usenet are not added yet.
 
 ### Radarr Setup
 
@@ -189,7 +262,9 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 
 #### Download Clients
 
+##### Transmission
 -   Under Remote Path Mappings, click the +
+    -   Select Transmission
     -   Select your IP address in the Host field (e.g. 192.168.1.101)
     -   For Remote Path, enter your equivalent to `/Volumes/Pteri/torrent_fiesta/data/torrents/books/`
     -   For Local Path, select `/data/torrents/books/`
@@ -230,7 +305,7 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 
 ### General
 
--   Auto selected downloads will often have very few seeders.
+-   Auto selected Bittorrent downloads will often have very few seeders.
     -   Apparently some indexers lie about how many seeders there are.
     -   Interactive search can sometimes yield better results.
     -   Setting the Minimum Seeders value in Prowler => Apps => Sync Profiles may yield better results.
@@ -241,9 +316,8 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 
 ### Readarr
 
--   Does not work very well using torrent trackers.
--   Prolly need to setup Usenet tracker for ebooks, as torrents do not seem to source well.
--   [MyAnonamouse](https://www.myanonamouse.net/) is a private tracker that requires an invite, which may improve things for torrents.
+-   Usenet is best for ebooks, as torrents do not seem to source well.
+-   [MyAnonamouse](https://www.myanonamouse.net/) is a private tracker that requires an invite, which may improve things for torrents. See [Thoughts](#thoughts) below.
 -   [Anna's Archive](https://www.myanonamouse.net/) is an alternative source for ebooks, but does not work with Readarr.
 
 ## Documentation
@@ -253,6 +327,7 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 -   [Readarr Quick Start Guide](https://wiki.servarr.com/readarr/quick-start-guide)
 -   [Sonarr Quick Start Guide](https://wiki.servarr.com/sonarr/quick-start-guide).
 -   [Servarr Docker Guide](https://wiki.servarr.com/docker-guide)
+-   [SABnzbd Getting Started Guide](https://sabnzbd.org/wiki/introduction/quick-setup)
 
 ## Helpful Links
 
@@ -263,3 +338,16 @@ The above is for Torrents only. Docs for Usenet are not added yet.
 -   [How to get invited to MAM](https://www.myanonamouse.net/chathelp.php).
 -   [How to route any Docker container through a VPN container](https://www.youtube.com/watch?v=znSu_FuKFW0)
 -   [Sonarr Troubleshooting](https://wiki.servarr.com/sonarr/troubleshooting)
+
+## To Do
+
+-   Implement Lidarr and Whisparr
+-   Implement Plex Automation/Integration
+-   Implement VPN container to route Bittorrent and Usenet traffic through
+
+## Thoughts
+
+-   One of the best things about using ServeArr apps is that it puts a layer between the user and torrent indexer sites. This means no more ads, popups and other annoying and potentially malicious things.
+-   Torrent indexers are not very good for books, except for perhaps [MyAnonaMouse](https://www.myanonamouse.net).
+-   While MyAnonaMouse seems to be a great source for books, Many releases require VIP status, which takes a long time to get, unless you pay for it.  This may be a worthwhile investment; however, many books, including new releases, are readily available via Usenet.
+-   Nearly all--if not all--NZB indexers are private and paid. This means no ads, popups, etc.

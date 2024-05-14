@@ -8,3 +8,7 @@ services:
         extends:
             file: ./xarr/readarr-compose.yaml
             service: readarr
+    sabnzbd:
+        extends:
+            file: ./sabnzbd/compose.yaml
+            service: sabnzbd

@@ -11,6 +11,6 @@ state_manager = StateManager()
 if __name__ == '__main__':
     clear_screen()
     print_ascii_art(app_title, "red")
-    start_docker()
     start_transmission()
+    start_docker()
     init_menu(state_manager)

@@ -20,7 +20,8 @@ from stuff import (
     open_ui,
     start_service,
     stop_service,
-    tail_log
+    tail_log,
+    update_service
 )
 
 from typing import Union
@@ -33,17 +34,19 @@ alpha_menu_options = {
     "d": MenuOption.OPEN_READARR.value,
     "e": MenuOption.TAIL_READARR_LOG.value,
     "f": MenuOption.FULL_SERVICE.value,
-    "k": MenuOption.BACK.value,
     "l": MenuOption.SHOW_LOGS.value,
     "m": MenuOption.MOVIES.value,
+    "n": MenuOption.TAIL_SABNZBD_LOG.value,
     "o": MenuOption.TAIL_SONARR_LOG.value,
     "p": MenuOption.OPEN_PROWLARR.value,
     "q": MenuOption.QUIT.value,
     "r": MenuOption.OPEN_RADARR.value,
     "s": MenuOption.OPEN_SONARR.value,
     "t": MenuOption.RESTART_APP.value,
+    "u": MenuOption.UPDATE_APPS.value,
     "v": MenuOption.TV_SHOWS.value,
     "w": MenuOption.TAIL_PROWLARR_LOG.value,
+    "z": MenuOption.OPEN_SABNZBD.value,
 }
 
 main_menu_options = {
@@ -52,26 +55,29 @@ main_menu_options = {
     3: MenuOption.TV_SHOWS.value,
     4: MenuOption.FULL_SERVICE.value,
     5: MenuOption.RESTART_APP.value,
-    6: MenuOption.QUIT.value,
+    6: MenuOption.UPDATE_APPS.value,
+    7: MenuOption.QUIT.value,
 }
 
 full_service_options = {
     1: MenuOption.OPEN_PROWLARR.value,
-    2: MenuOption.OPEN_RADARR.value,
-    3: MenuOption.OPEN_READARR.value,
-    4: MenuOption.OPEN_SONARR.value,
-    5: MenuOption.OPEN_MEDIA.value,
-    6: MenuOption.SHOW_LOGS.value,
-    7: MenuOption.RESTART_APP.value,
-    8: MenuOption.QUIT.value,
+    2: MenuOption.OPEN_SABNZBD.value,
+    3: MenuOption.OPEN_RADARR.value,
+    4: MenuOption.OPEN_READARR.value,
+    5: MenuOption.OPEN_SONARR.value,
+    6: MenuOption.OPEN_MEDIA.value,
+    7: MenuOption.SHOW_LOGS.value,
+    8: MenuOption.RESTART_APP.value,
+    9: MenuOption.QUIT.value,
 }
 
 log_menu_options = {
     1: MenuOption.TAIL_PROWLARR_LOG.value,
     2: MenuOption.TAIL_RADARR_LOG.value,
     3: MenuOption.TAIL_READARR_LOG.value,
-    4: MenuOption.TAIL_SONARR_LOG.value,
-    5: MenuOption.BACK.value,
+    4: MenuOption.TAIL_SABNZBD_LOG.value,
+    5: MenuOption.TAIL_SONARR_LOG.value,
+    6: MenuOption.BACK_TO_FULL_SERVICE.value,
 }
 
 books_menu_options = {
@@ -81,7 +87,8 @@ books_menu_options = {
     4: MenuOption.SWITCH_TO_TV.value,
     5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
     6: MenuOption.TAIL_READARR_LOG.value,
-    7: MenuOption.QUIT.value,
+    7: MenuOption.UPDATE_READARR.value,
+    8: MenuOption.QUIT.value,
 }
 
 movie_menu_options = {
@@ -102,6 +109,12 @@ tv_menu_options = {
     5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
     6: MenuOption.TAIL_SONARR_LOG.value,
     7: MenuOption.QUIT.value,
+}
+
+update_menu_options = {
+    1: MenuOption.UPDATE_PROWLARR.value,
+    2: MenuOption.UPDATE_READARR.value,
+    3: MenuOption.BACK_TO_MAIN.value,
 }
 
 
@@ -155,9 +168,11 @@ def get_color_for_service(service: Service = None):
 def handle_option(options, selection, state_manager: StateManager):
     selected_option = options[selection]
     active_service: Union[Service,  None] = state_manager.get_active_service()
-    if selected_option == MenuOption.BACK.value:
+    if selected_option == MenuOption.BACK_TO_FULL_SERVICE.value:
         state_manager.set_active_service(state_manager.full_service)
         run_full_service(state_manager)
+    elif selected_option == MenuOption.BACK_TO_MAIN.value:
+        run_main_menu(state_manager)
     elif selected_option == MenuOption.BOOKS.value:
         state_manager.set_active_service(state_manager.readarr)
         start_service(state_manager.readarr)
@@ -207,6 +222,8 @@ def handle_option(options, selection, state_manager: StateManager):
         open_ui(state_manager.radarr)
     elif selected_option == MenuOption.OPEN_READARR.value:
         open_ui(state_manager.readarr)
+    elif selected_option == MenuOption.OPEN_SABNZBD.value:
+        open_ui(state_manager.sabnzbd)
     elif selected_option == MenuOption.OPEN_SONARR.value:
         open_ui(state_manager.sonarr)
     elif selected_option == MenuOption.RESTART_APP.value:
@@ -228,8 +245,16 @@ def handle_option(options, selection, state_manager: StateManager):
         tail_log(LogPath.RADARR.value)
     elif selected_option == MenuOption.TAIL_READARR_LOG.value:
         tail_log(LogPath.READARR.value)
+    elif selected_option == MenuOption.TAIL_SABNZBD_LOG.value:
+        tail_log(LogPath.SABNZBD.value)
     elif selected_option == MenuOption.TAIL_SONARR_LOG.value:
         tail_log(LogPath.SONARR.value)
+    elif selected_option == MenuOption.UPDATE_APPS.value:
+        run_update_menu(state_manager)
+    elif selected_option == MenuOption.UPDATE_PROWLARR.value:
+        update_service(state_manager.prowlarr)
+    elif selected_option == MenuOption.UPDATE_READARR.value:
+        update_service(state_manager.readarr)
     elif selected_option == MenuOption.QUIT.value:
         stop_service(active_service)
         quit_app()
@@ -279,6 +304,10 @@ def run_tv_menu(state_manager):
 
 def run_logs_menu(state_manager):
     run_menu(log_menu_options, handle_option, state_manager)
+
+
+def run_update_menu(state_manager):
+    run_menu(update_menu_options, handle_option, state_manager)
 
 
 def run_main_menu(state_manager):

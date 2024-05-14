@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+    prowlarr:
+        extends:
+            file: ./xarr/prowlarr-compose.yaml
+            service: prowlarr
+    radarr:
+        extends:
+            file: ./xarr/radarr-compose.yaml
+            service: radarr
+    readarr:
+        extends:
+            file: ./xarr/readarr-compose.yaml
+            service: readarr
+    sonarr:
+        extends:
+            file: ./xarr/sonarr-compose.yaml
+            service: sonarr
+    sabnzbd:
+        extends:
+            file: ./nzb/sabnzbd-compose.yaml
+            service: sabnzbd

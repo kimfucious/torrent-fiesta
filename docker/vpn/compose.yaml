@@ -1,0 +1,31 @@
+secrets:
+  username:
+    file: ./secrets/vpn-username.txt
+  password:
+    file: ./secrets/vpn-password.txt
+services:
+  transmission-openvpn:
+    cap_add:
+      - NET_ADMIN
+    image: haugene/transmission-openvpn
+    environment:
+      - OPENVPN_PROVIDER=TUNNELBEAR
+      # - OPENVPN_CONFIG=france optional
+      - OPENVPN_USERNAME_FILE=/run/secrets/username
+      - OPENVPN_PASSWORD_FILE=/run/secrets/password
+      - LOCAL_NETWORK=192.168.1.0/24
+    # Keeps container alive instead of existing on vpn auth error
+    # command: ["sleep", "infinity"] # Sleep indefinitely
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+    ports:
+      - '9091:9091'
+    secrets:
+      - username
+      - password
+    volumes:
+      - /Volumes/Pteri/torrent_fiesta/vpn/config:/config
+      - /Volumes/Pteri/torrent_fiesta/data:/data
+      - /Volumes/Pteri/torrent_fiesta/data/torrents:/data/torrents

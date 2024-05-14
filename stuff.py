@@ -31,7 +31,7 @@ def start_docker():
 
 
 def start_transmission():
-    if not is_docker_running():
+    if not is_transmission_running():
         spinner = Halo(text="Starting Transmission...", spinner="dots")
         spinner.start()
         subprocess.run(shlex.split('open -a "Transmission"'))
@@ -42,7 +42,7 @@ def start_transmission():
 
 
 def open_ui(service: Service = None):
-    if service is None:
+    if service is None or service.ui_url is None:
         return
     path = service.ui_url
     subprocess.run(shlex.split(
@@ -100,14 +100,6 @@ def stop_docker_compose(service: Service):
         return
 
 
-# def stop_full_service():
-#     close_ui(ServiceName.PROWLARR.value)
-#     close_ui(ServiceName.RADARR.value)
-#     close_ui(ServiceName.READARR.value)
-#     close_ui(ServiceName.SONARR.value)
-#     stop_docker_compose()
-
-
 def tail_log(path):
     print(colored("\nPress Ctrl+C to exit logging", "cyan"))
     try:
@@ -131,17 +123,19 @@ def tail_log(path):
 
 def start_service(service: Service):
     label = service.friendly_name
-    name = docker_compose_project_name
-    project = service.compose_project_filename
+    compose_project_name = docker_compose_project_name
+    service_name = service.name
     try:
-        path = f"docker/{project}-compose.yaml"
-        print(" ")
+        path = f"docker/services/{service_name}/compose.yaml"
+        # print("name", name)
+        # print("project", project)
+        # print("path", path)
         spinner = Halo(text=f"Starting {label}...", spinner="dots")
         spinner.start()
         # Redirect both stdout and stderr to PIPE
         process = subprocess.run(
             shlex.split(
-                f'docker compose -p {name} -f {path} up -d'
+                f'docker compose -p {compose_project_name} -f {path} up -d'
             ),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -164,66 +158,67 @@ def start_service(service: Service):
         print(output)
 
     # Service started successfully, continue with other operations
-    time.sleep(2)
-    open_ui(service)
+    if service.ui_url:
+        time.sleep(2)
+        open_ui(service)
     spinner.stop()
 
 
-def start_service2(service: Service):
-    label = service.friendly_name
-    name = docker_compose_project_name
-    project = service.compose_project_filename
-    try:
-        path = f"docker/{project}-compose.yaml"
-        spinner = Halo(text=f"Starting {label}...", spinner="dots")
-        spinner.start()
-        with open("docker_up.log", "w") as log_file:
-            subprocess.run(
-                shlex.split(
-                    f'docker compose -p {name} -f {path} up -d'
-                ),
-                stdout=log_file,
-                stderr=subprocess.STDOUT  # Redirect stderr to stdout
-            )
+# def start_service2(service: Service):
+#     label = service.friendly_name
+#     name = docker_compose_project_name
+#     project = service.compose_project_filename
+#     try:
+#         path = f"docker/{project}-compose.yaml"
+#         spinner = Halo(text=f"Starting {label}...", spinner="dots")
+#         spinner.start()
+#         with open("docker_up.log", "w") as log_file:
+#             subprocess.run(
+#                 shlex.split(
+#                     f'docker compose -p {name} -f {path} up -d'
+#                 ),
+#                 stdout=log_file,
+#                 stderr=subprocess.STDOUT  # Redirect stderr to stdout
+#             )
 
-    except subprocess.CalledProcessError as e:
-        if "Conflict" in str(e):
-            # Handle conflict error
-            spinner.fail("Something is already running.  Restarting...")
-            stop_docker_compose(service)
-            start_service(service)
-        else:
-            print(f"Error starting {service.name}: {e}")
-        return
+#     except subprocess.CalledProcessError as e:
+#         if "Conflict" in str(e):
+#             # Handle conflict error
+#             spinner.fail("Something is already running.  Restarting...")
+#             stop_docker_compose(service)
+#             start_service(service)
+#         else:
+#             print(f"Error starting {service.name}: {e}")
+#         return
 
-    # Service started successfully, continue with other operations
-    time.sleep(2)
-    open_ui(service)
-    spinner.stop()
+#     # Service started successfully, continue with other operations
+#     time.sleep(2)
+#     open_ui(service)
+#     spinner.stop()
 
 
-def start_service3(service: Service):
-    name = docker_compose_project_name
-    project = service.compose_project_filename
-    try:
-        path = f"docker/{project}-compose.yaml"
-        spinner = Halo(text=f"Starting {project} ...", spinner="dots")
-        spinner.start()
-        subprocess.run(shlex.split(
-            f'docker compose -p {name} -f {path} up -d'))
+# def start_service3(service: Service):
+#     name = docker_compose_project_name
+#     project = service.compose_project_filename
+#     try:
+#         path = f"docker/{project}-compose.yaml"
+#         spinner = Halo(text=f"Starting {project} ...", spinner="dots")
+#         spinner.start()
+#         subprocess.run(shlex.split(
+#             f'docker compose -p {name} -f {path} up -d'))
 
-    except subprocess.CalledProcessError as e:
-        if "Conflict" in str(e):
-            # spinner.fail("Something is already running.  Restarting...")
-            stop_docker_compose(service)
-            start_service(service)
-        else:
-            print(f"Error starting {service.name}: {e}")
-        return
+#     except subprocess.CalledProcessError as e:
+#         if "Conflict" in str(e):
+#             # spinner.fail("Something is already running.  Restarting...")
+#             stop_docker_compose(service)
+#             start_service(service)
+#         else:
+#             print(f"Error starting {service.name}: {e}")
+#         return
 
-    time.sleep(2)
-    # spinner.stop()
-    open_ui(service)
+#     time.sleep(2)
+#     # spinner.stop()
+#     open_ui(service)
 
 
 def stop_service(service: Service = None):
@@ -235,6 +230,7 @@ def stop_service(service: Service = None):
         close_ui(ServiceName.PROWLARR.value)
         close_ui(ServiceName.RADARR.value)
         close_ui(ServiceName.READARR.value)
+        close_ui(ServiceName.SABNZBD.value)
         close_ui(ServiceName.SONARR.value)
     else:
         close_ui(ServiceName.PROWLARR.value)
@@ -249,3 +245,25 @@ def stop_docker():
     end tell
     '''
     subprocess.run(['osascript', '-e', applescript])
+
+
+def update_service(service: Service = None):
+    # This menu option is only available through main menu
+    # Services are not running at this point
+    service_name = service.name
+    if service_name is None:
+        print("Service Not Configured for Update")
+        time.sleep(3)
+        return
+    image = service.image_url
+    print(" ")
+    try:
+        spinner = Halo(text=f"Updating {
+                       service.friendly_name}...", spinner="dots")
+        spinner.start()
+        subprocess.run(["docker", "pull", image])
+        spinner.succeed()
+        return
+    except subprocess.CalledProcessError as e:
+        spinner.fail("Error updating service.", e)
+        return
