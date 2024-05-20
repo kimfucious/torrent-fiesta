@@ -64,7 +64,9 @@ class MenuOption(Enum):
     TV_SHOWS = "T(v) Shows"
     UPDATE_APPS = "(U)pdate Apps"
     UPDATE_PROWLARR = "Update Prowlarr"
+    UPDATE_RADARR = "Update Radarr"
     UPDATE_READARR = "Update Readarr"
+    UPDATE_SONARR = "Update Readarr"
 
 
 class ComposeFileName(Enum):

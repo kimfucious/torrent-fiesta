@@ -113,8 +113,10 @@ tv_menu_options = {
 
 update_menu_options = {
     1: MenuOption.UPDATE_PROWLARR.value,
-    2: MenuOption.UPDATE_READARR.value,
-    3: MenuOption.BACK_TO_MAIN.value,
+    2: MenuOption.UPDATE_RADARR.value,
+    3: MenuOption.UPDATE_READARR.value,
+    4: MenuOption.UPDATE_SONAR.value,
+    5: MenuOption.BACK_TO_MAIN.value,
 }
 
 
@@ -253,8 +255,12 @@ def handle_option(options, selection, state_manager: StateManager):
         run_update_menu(state_manager)
     elif selected_option == MenuOption.UPDATE_PROWLARR.value:
         update_service(state_manager.prowlarr)
+    elif selected_option == MenuOption.UPDATE_RADARR.value:
+        update_service(state_manager.radarr)
     elif selected_option == MenuOption.UPDATE_READARR.value:
         update_service(state_manager.readarr)
+    elif selected_option == MenuOption.UPDATE_SONARR.value:
+        update_service(state_manager.sonarr)
     elif selected_option == MenuOption.QUIT.value:
         stop_service(active_service)
         quit_app()
