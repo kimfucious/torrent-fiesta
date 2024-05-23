@@ -66,7 +66,7 @@ class MenuOption(Enum):
     UPDATE_PROWLARR = "Update Prowlarr"
     UPDATE_RADARR = "Update Radarr"
     UPDATE_READARR = "Update Readarr"
-    UPDATE_SONARR = "Update Readarr"
+    UPDATE_SONARR = "Update Sonarr"
 
 
 class ComposeFileName(Enum):

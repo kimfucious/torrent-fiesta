@@ -115,7 +115,7 @@ update_menu_options = {
     1: MenuOption.UPDATE_PROWLARR.value,
     2: MenuOption.UPDATE_RADARR.value,
     3: MenuOption.UPDATE_READARR.value,
-    4: MenuOption.UPDATE_SONAR.value,
+    4: MenuOption.UPDATE_SONARR.value,
     5: MenuOption.BACK_TO_MAIN.value,
 }
 
