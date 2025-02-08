@@ -52,11 +52,25 @@ def open_ui(service: Service = None):
 def close_ui(service_name: str):
     if service_name is None:
         return
+
     name = service_name
-    subprocess.run(shlex.split(
+
+    # Check if the tab exists before attempting to close it
+    check_command = shlex.split(
         f"osascript -e 'tell application \"Google Chrome\""
-        f" to close (tabs of window 1 whose title contains \"{name}\")'"
-    ))
+        f" to exists (tab of window 1 whose title contains \"{name}\")'"
+    )
+    check_result = subprocess.run(
+        check_command, capture_output=True, text=True)
+
+    if check_result.stdout.strip() == "true":
+        close_command = shlex.split(
+            f"osascript -e 'tell application \"Google Chrome\""
+            f" to close (tabs of window 1 whose title contains \"{name}\")'"
+        )
+        subprocess.run(close_command)
+    else:
+        return
 
 
 def get_running_docker_compose_projects():
@@ -120,19 +134,25 @@ def tail_log(path):
 #     except subprocess.CalledProcessError:
 #         return False
 
+def wait():
+    from helpers import wait_for_keypress
+    print(colored("Press any key to continue", "cyan"))
+    wait_for_keypress()
+
 
 def start_service(service: Service):
     label = service.friendly_name
     compose_project_name = docker_compose_project_name
-    service_name = service.name
+    # service_name = service.name
+    compose_dir = service.compose_dir
     try:
-        path = f"docker/services/{service_name}/compose.yaml"
-        # print("name", name)
-        # print("project", project)
+        path = f"docker/services/{compose_dir}/compose.yaml"
+        # print("name", service_name)
+        # print("project", compose_project_name)
         # print("path", path)
+        # wait()
         spinner = Halo(text=f"Starting {label}...", spinner="dots")
         spinner.start()
-        # Redirect both stdout and stderr to PIPE
         process = subprocess.run(
             shlex.split(
                 f'docker compose -p {compose_project_name} -f {path} up -d'
@@ -142,6 +162,13 @@ def start_service(service: Service):
             text=True  # Ensure the output is returned as a string
         )
 
+        # Use this for debug
+        # subprocess.run(
+        #     shlex.split(
+        #         f'docker compose -p {compose_project_name} -f {path} up'
+        #     ),
+        # )
+
     except subprocess.CalledProcessError as e:
         if "Conflict" in str(e):
             # Handle conflict error
@@ -150,9 +177,11 @@ def start_service(service: Service):
             start_service(service)
         else:
             print(f"Error starting {service.name}: {e}")
+            time.sleep(10)
         return
 
     # Check for any output (stdout or stderr) and print it if needed
+    # Comment out for debug
     output = process.stdout.strip()
     if output:
         print(output)
@@ -161,7 +190,7 @@ def start_service(service: Service):
     if service.ui_url:
         time.sleep(2)
         open_ui(service)
-    spinner.stop()
+    spinner.succeed()
 
 
 # def start_service2(service: Service):
@@ -232,9 +261,12 @@ def stop_service(service: Service = None):
         close_ui(ServiceName.READARR.value)
         close_ui(ServiceName.SABNZBD.value)
         close_ui(ServiceName.SONARR.value)
+        close_ui(ServiceName.WHISPARR.value)
+        return
     else:
         close_ui(ServiceName.PROWLARR.value)
         close_ui(service_name)
+        return
 
 
 def stop_docker():
