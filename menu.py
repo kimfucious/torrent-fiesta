@@ -46,6 +46,7 @@ alpha_menu_options = {
     "u": MenuOption.UPDATE_APPS.value,
     "v": MenuOption.TV_SHOWS.value,
     "w": MenuOption.TAIL_PROWLARR_LOG.value,
+    "x": MenuOption.PORN.value,
     "z": MenuOption.OPEN_SABNZBD.value,
 }
 
@@ -65,10 +66,11 @@ full_service_options = {
     3: MenuOption.OPEN_RADARR.value,
     4: MenuOption.OPEN_READARR.value,
     5: MenuOption.OPEN_SONARR.value,
-    6: MenuOption.OPEN_MEDIA.value,
-    7: MenuOption.SHOW_LOGS.value,
-    8: MenuOption.RESTART_APP.value,
-    9: MenuOption.QUIT.value,
+    6: MenuOption.OPEN_WHISPARR.value,
+    7: MenuOption.OPEN_MEDIA.value,
+    8: MenuOption.SHOW_LOGS.value,
+    9: MenuOption.RESTART_APP.value,
+    10: MenuOption.QUIT.value,
 }
 
 log_menu_options = {
@@ -77,7 +79,8 @@ log_menu_options = {
     3: MenuOption.TAIL_READARR_LOG.value,
     4: MenuOption.TAIL_SABNZBD_LOG.value,
     5: MenuOption.TAIL_SONARR_LOG.value,
-    6: MenuOption.BACK_TO_FULL_SERVICE.value,
+    6: MenuOption.TAIL_WHISPARR_LOG.value,
+    7: MenuOption.BACK_TO_FULL_SERVICE.value,
 }
 
 books_menu_options = {
@@ -111,12 +114,26 @@ tv_menu_options = {
     7: MenuOption.QUIT.value,
 }
 
+porn_menu_options = {
+    1: MenuOption.OPEN_PROWLARR.value,
+    2: MenuOption.OPEN_WHISPARR.value,
+    3: MenuOption.SWITCH_TO_BOOKS.value,
+    4: MenuOption.SWITCH_TO_MOVIES.value,
+    5: MenuOption.SWITCH_TO_TV.value,
+    6: MenuOption.SWITCH_TO_FULL_SERVICE.value,
+    7: MenuOption.TAIL_PROWLARR_LOG.value,
+    8: MenuOption.TAIL_WHISPARR_LOG.value,
+    9: MenuOption.QUIT.value,
+}
+
 update_menu_options = {
     1: MenuOption.UPDATE_PROWLARR.value,
     2: MenuOption.UPDATE_RADARR.value,
     3: MenuOption.UPDATE_READARR.value,
     4: MenuOption.UPDATE_SONARR.value,
-    5: MenuOption.BACK_TO_MAIN.value,
+    5: MenuOption.UPDATE_SABNZBD.value,
+    6: MenuOption.UPDATE_WHISPARR.value,
+    7: MenuOption.BACK_TO_MAIN.value,
 }
 
 
@@ -136,6 +153,8 @@ def get_title(service: Service = None):
         return f"{app_title} Books"
     elif name == ServiceName.SONARR.value:
         return f"{app_title} TV"
+    elif name == ServiceName.WHISPARR.value:
+        return f"{app_title} XXX"
     elif name == ServiceName.FULL_SERVICE.value:
         return f"{app_title} Full Service"
     else:
@@ -199,6 +218,10 @@ def handle_option(options, selection, state_manager: StateManager):
         state_manager.set_active_service(state_manager.sonarr)
         start_service(state_manager.sonarr)
         run_tv_menu(state_manager)
+    elif selected_option == MenuOption.PORN.value:
+        state_manager.set_active_service(state_manager.whisparr)
+        start_service(state_manager.whisparr)
+        run_porn_menu(state_manager)
     elif selected_option == MenuOption.SWITCH_TO_TV.value:
         if (active_service is not None):
             stop_service(active_service)
@@ -228,6 +251,8 @@ def handle_option(options, selection, state_manager: StateManager):
         open_ui(state_manager.sabnzbd)
     elif selected_option == MenuOption.OPEN_SONARR.value:
         open_ui(state_manager.sonarr)
+    elif selected_option == MenuOption.OPEN_WHISPARR.value:
+        open_ui(state_manager.whisparr)
     elif selected_option == MenuOption.RESTART_APP.value:
         choice = input(
             colored("\nAre you sure you want to restart? (y/n): ", "red"))
@@ -251,6 +276,8 @@ def handle_option(options, selection, state_manager: StateManager):
         tail_log(LogPath.SABNZBD.value)
     elif selected_option == MenuOption.TAIL_SONARR_LOG.value:
         tail_log(LogPath.SONARR.value)
+    elif selected_option == MenuOption.TAIL_WHISPARR_LOG.value:
+        tail_log(LogPath.WHISPARR.value)
     elif selected_option == MenuOption.UPDATE_APPS.value:
         run_update_menu(state_manager)
     elif selected_option == MenuOption.UPDATE_PROWLARR.value:
@@ -261,6 +288,10 @@ def handle_option(options, selection, state_manager: StateManager):
         update_service(state_manager.readarr)
     elif selected_option == MenuOption.UPDATE_SONARR.value:
         update_service(state_manager.sonarr)
+    elif selected_option == MenuOption.UPDATE_SABNZBD.value:
+        update_service(state_manager.sabnzbd)
+    elif selected_option == MenuOption.UPDATE_WHISPARR.value:
+        update_service(state_manager.whisparr)
     elif selected_option == MenuOption.QUIT.value:
         stop_service(active_service)
         quit_app()
@@ -302,6 +333,10 @@ def run_books_menu(state_manager):
 
 def run_movies_menu(state_manager):
     run_menu(movie_menu_options, handle_option, state_manager)
+
+
+def run_porn_menu(state_manager):
+    run_menu(porn_menu_options, handle_option, state_manager)
 
 
 def run_tv_menu(state_manager):
