@@ -1,0 +1,17 @@
+services:
+    whisparr:
+        container_name: whisparr
+        image: hotio/whisparr:latest
+        ports:
+            - "6969:6969"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            # - PUID=502 # Use a User ID that has permissions on the volumes below
+            # - PGID=20 # Use a Group ID that has permissions on the volumes below
+            # - UMASK=002
+            - TZ=Asia/Bangkok # User your timezone or UTC
+        volumes:
+            - /Volumes/Pteri/torrent_fiesta/whisparr/config:/config
+            - /Volumes/Pteri/torrent_fiesta/data:/data
+            - /Volumes/Pteri/torrent_fiesta/data/torrents:/data/torrents

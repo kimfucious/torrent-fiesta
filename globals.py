@@ -18,13 +18,16 @@ class LogPath(Enum):
     READARR = f"{app_root_on_disk}/readarr/config/logs/readarr.txt"
     SABNZBD = f"{app_root_on_disk}/sabnzbd/config/logs/sabnzbd.log"
     SONARR = f"{app_root_on_disk}/sonarr/config/logs/sonarr.txt"
+    WHISPARR = f"{app_root_on_disk}/whisparr/config/logs/whisparr.txt"
 
 
 class ServiceImageUrl(Enum):
     PROWLARR = "lscr.io/linuxserver/prowlarr:latest"
     RADARR = "lscr.io/linuxserver/radarr:latest"
-    SONARR = "lscr.io/linuxserver/sonarr:latest"
     READARR = "lscr.io/linuxserver/readarr:develop"
+    SABNZBD = "lscr.io/linuxserver/sabnzbd:latest" 
+    SONARR = "lscr.io/linuxserver/sonarr:latest"
+    WHISPARR = "hotio/whisparr:latest"
 
 
 class MediaPath(Enum):
@@ -45,10 +48,12 @@ class MenuOption(Enum):
     OPEN_READARR = "Open Rea(d)arr"
     OPEN_SABNZBD = "Open SABN(Z)BD"
     OPEN_SONARR = "Open (S)onarr"
+    OPEN_WHISPARR = "Open Whisparr"
     OPEN_MEDIA = "Open Media"
     OPEN_MEDIA_MOVIES = "Open Media/Movies"
     OPEN_MEDIA_TV = "Open Media/TV"
     OPEN_MEDIA_BOOKS = "Open Media/Books"
+    PORN = "Porn"
     QUIT = "(Q)uit"
     RESTART_APP = "Res(t)art App"
     SHOW_LOGS = "Show (L)ogs"
@@ -61,19 +66,23 @@ class MenuOption(Enum):
     TAIL_READARR_LOG = "Tail R(e)adarr Log"
     TAIL_SONARR_LOG = "Tail S(o)narr Log"
     TAIL_SABNZBD_LOG = "Tail SAB(n)zbd Log"
+    TAIL_WHISPARR_LOG = "Tail Whisparr Log"
     TV_SHOWS = "T(v) Shows"
     UPDATE_APPS = "(U)pdate Apps"
     UPDATE_PROWLARR = "Update Prowlarr"
     UPDATE_RADARR = "Update Radarr"
     UPDATE_READARR = "Update Readarr"
+    UPDATE_SABNZBD = "Update SABnzbd"
     UPDATE_SONARR = "Update Sonarr"
+    UPDATE_WHISPARR = "Update Whisparr"
 
 
-class ComposeFileName(Enum):
+class ComposeDirectory(Enum):
     FULL_SERVICE = "full_service"
     RADARR = "movies"
     READARR = "books"
     SONARR = "tv"
+    WHISPARR = "porn"
 
 
 class FriendlyName(Enum):
@@ -83,6 +92,7 @@ class FriendlyName(Enum):
     READARR = "Readarr"
     SONARR = "Sonarr"
     SABNZBD = "SABnzbd"
+    WHISPARR = "Whisparr"
 
 
 class ServiceName(Enum):
@@ -92,6 +102,7 @@ class ServiceName(Enum):
     READARR = "readarr"
     SONARR = "sonarr"
     SABNZBD = "sabnzbd"
+    WHISPARR = "whisparr"
 
 
 class ServiceUiUrl(Enum):
@@ -100,6 +111,7 @@ class ServiceUiUrl(Enum):
     READARR = "http://localhost:8787"
     SONARR = "http://localhost:8989"
     SABNZBD = "http://localhost:8080"
+    WHISPARR = "http://localhost:6969"
 
 
 class Service:
@@ -108,7 +120,7 @@ class Service:
             name,
             friendly_name,
             image_url,
-            # compose_project_filename=None,
+            compose_dir=None,
             log_path=None,
             media_path=None,
             ui_url=None,
@@ -116,7 +128,7 @@ class Service:
         self.name = name
         self.friendly_name = friendly_name
         self.image_url = image_url
-        # self.compose_project_filename = compose_project_filename
+        self.compose_dir = compose_dir
         self.ui_url = ui_url
         self.media_path = media_path
         self.log_path = log_path
@@ -131,7 +143,7 @@ class StateManager:
         ServiceName.PROWLARR.value,
         FriendlyName.PROWLARR.value,
         ServiceImageUrl.PROWLARR.value,
-        # None,
+        None,
         LogPath.PROWLARR,
         None,
         ServiceUiUrl.PROWLARR.value,
@@ -140,7 +152,7 @@ class StateManager:
         ServiceName.RADARR.value,
         FriendlyName.RADARR.value,
         ServiceImageUrl.RADARR.value,
-        # ComposeFileName.RADARR.value,
+        ComposeDirectory.RADARR.value,
         LogPath.RADARR,
         MediaPath.MOVIES.value,
         ServiceUiUrl.RADARR.value,
@@ -149,6 +161,7 @@ class StateManager:
         ServiceName.READARR.value,
         FriendlyName.READARR.value,
         ServiceImageUrl.READARR.value,
+        ComposeDirectory.READARR.value,
         LogPath.READARR,
         MediaPath.BOOKS.value,
         ServiceUiUrl.READARR.value,
@@ -156,6 +169,7 @@ class StateManager:
     sabnzbd = Service(
         ServiceName.SABNZBD.value,
         FriendlyName.SABNZBD.value,
+        ServiceImageUrl.SABNZBD.value,
         None,
         LogPath.SABNZBD,
         MediaPath.MEDIA.value,
@@ -165,14 +179,25 @@ class StateManager:
         ServiceName.SONARR.value,
         FriendlyName.SONARR.value,
         ServiceImageUrl.SONARR.value,
+        ComposeDirectory.SONARR.value,
         LogPath.SONARR,
         MediaPath.TV.value,
         ServiceUiUrl.SONARR.value,
+    )
+    whisparr = Service(
+        ServiceName.WHISPARR.value,
+        FriendlyName.WHISPARR.value,
+        ServiceImageUrl.WHISPARR.value,
+        ComposeDirectory.WHISPARR.value,
+        LogPath.WHISPARR,
+        MediaPath.MEDIA.value,
+        ServiceUiUrl.WHISPARR.value,
     )
     full_service = Service(
         ServiceName.FULL_SERVICE.value,
         FriendlyName.FULL_SERVICE.value,
         None,
+        ComposeDirectory.FULL_SERVICE.value,
         None,
         MediaPath.MEDIA.value,
         None
