@@ -79,8 +79,6 @@ log_menu_options = {
     6: MenuOption.BACK_TO_FULL_SERVICE.value,
 }
 
-
-
 movie_menu_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_RADARR.value,
@@ -294,9 +292,6 @@ def run_menu(options, handler, state_manager):
 
 def run_full_service(state_manager):
     run_menu(full_service_options, handle_option, state_manager)
-
-
-
 
 
 def run_movies_menu(state_manager):
