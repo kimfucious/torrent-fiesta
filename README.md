@@ -62,7 +62,7 @@ Create a folder structure like this on your local machine:
 .
 ├── data
 │   ├── media # Servarr apps import files to here
-│   │   ├── books # Readarr
+
 │   │   ├── movies # Radarr
 │   │   ├── music # Lidarr
 │   │   └── tv # Sonarr
@@ -87,7 +87,7 @@ Create a folder structure like this on your local machine:
 │   └── config
 ├── radarr
 │   └── config
-├── readarr
+
 │   └── config
 ├── sabnzbd
 │   └── config
@@ -147,7 +147,7 @@ This should be fairly intuitive, but here's a few clarifications:
 
 At present, this project is setup to use Transmission installed locally on your machine (not in a Docker container).
 
-They only tricky thing is when using Readarr.
+
 
 ### SABnzbs
 
@@ -195,7 +195,7 @@ Once that container is running, the SABnzbs UI can be reached at [http://localho
 NZB trackers are mostly--if not all--private. You need to register with them to use them.
 Each NAB indexer you add to Prowlarr will need an API Key provided once you sign in.
 
--   Setup Radarr, Readarr, and Sonarr under Settings => Apps
+-   Setup Radarr and Sonarr under Settings => Apps
     -   Be sure to use your local IP address, not `localhost`, for Server fields
     -   Get the API keys from each app individually.
     -   Update Sync Categories according to your needs.
@@ -235,39 +235,7 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
     -   For Remote Path, enter your equivalent to `/Volumes/Pteri/torrent_fiesta/data/torrents/movies/`
     -   For Local Path, select `/data/torrents/movies/`
 
-### Readarr Setup
 
--   Read the [Readarr Quick Start Guide](https://wiki.servarr.com/readarr/quick-start-guide)
-
-#### Authentication
-
--   Choose Authentication Method
--   Choose Disabled for Local Addresses
--   Enter Username and Password
-
-#### Media Management
-
-**NOTE:** Readarr is a bit different than the others so pay attention.
-
--   Add a Remote Path Mapping
-    -   Host: your local IP address (e.g. 192.168.1.101)
-    -   Remote Path: Your equivalent of `/Volumes/Pteri/torrent_fiesta/data/torrents/books/`
-    -   Local Path: `/data/torrents/books/`
--   Enable Rename Episodes
-
-#### Indexers
-
--   Copy the `API Key` from Settings => General
--   Add that to the Radarr App in Prowlarr
-
-#### Download Clients
-
-##### Transmission
--   Under Remote Path Mappings, click the +
-    -   Select Transmission
-    -   Select your IP address in the Host field (e.g. 192.168.1.101)
-    -   For Remote Path, enter your equivalent to `/Volumes/Pteri/torrent_fiesta/data/torrents/books/`
-    -   For Local Path, select `/data/torrents/books/`
 
 ### Sonarr Setup
 
@@ -314,17 +282,13 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
     -   Workaround 1: Separate Prowlarr configs
     -   Workaround 2: Get rid of individual Servarr options and only use Full Service
 
-### Readarr
 
--   Usenet is best for ebooks, as torrents do not seem to source well.
--   [MyAnonamouse](https://www.myanonamouse.net/) is a private tracker that requires an invite, which may improve things for torrents. See [Thoughts](#thoughts) below.
--   [Anna's Archive](https://www.myanonamouse.net/) is an alternative source for ebooks, but does not work with Readarr.
 
 ## Documentation
 
 -   [Servarr Wiki](https://wiki.servarr.com/)
 -   [Radarr Quick Start Guide](https://wiki.servarr.com/radarr/quick-start-guide)
--   [Readarr Quick Start Guide](https://wiki.servarr.com/readarr/quick-start-guide)
+
 -   [Sonarr Quick Start Guide](https://wiki.servarr.com/sonarr/quick-start-guide).
 -   [Servarr Docker Guide](https://wiki.servarr.com/docker-guide)
 -   [SABnzbd Getting Started Guide](https://sabnzbd.org/wiki/introduction/quick-setup)

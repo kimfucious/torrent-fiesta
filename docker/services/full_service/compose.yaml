@@ -8,10 +8,7 @@ services:
         extends:
             file: ../xarr/radarr/compose.yaml
             service: radarr
-    readarr:
-        extends:
-            file: ../xarr/readarr/compose.yaml
-            service: readarr
+
     sonarr:
         extends:
             file: ../xarr/sonarr/compose.yaml

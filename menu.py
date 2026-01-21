@@ -30,9 +30,8 @@ from termcolor import colored
 
 alpha_menu_options = {
     "a": MenuOption.TAIL_RADARR_LOG.value,
-    "b": MenuOption.BOOKS.value,
-    "d": MenuOption.OPEN_READARR.value,
-    "e": MenuOption.TAIL_READARR_LOG.value,
+
+
     "f": MenuOption.FULL_SERVICE.value,
     "l": MenuOption.SHOW_LOGS.value,
     "m": MenuOption.MOVIES.value,
@@ -51,7 +50,7 @@ alpha_menu_options = {
 }
 
 main_menu_options = {
-    1: MenuOption.BOOKS.value,
+
     2: MenuOption.MOVIES.value,
     3: MenuOption.TV_SHOWS.value,
     4: MenuOption.FULL_SERVICE.value,
@@ -64,7 +63,7 @@ full_service_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_SABNZBD.value,
     3: MenuOption.OPEN_RADARR.value,
-    4: MenuOption.OPEN_READARR.value,
+
     5: MenuOption.OPEN_SONARR.value,
     6: MenuOption.OPEN_WHISPARR.value,
     7: MenuOption.OPEN_MEDIA.value,
@@ -76,60 +75,48 @@ full_service_options = {
 log_menu_options = {
     1: MenuOption.TAIL_PROWLARR_LOG.value,
     2: MenuOption.TAIL_RADARR_LOG.value,
-    3: MenuOption.TAIL_READARR_LOG.value,
+
     4: MenuOption.TAIL_SABNZBD_LOG.value,
     5: MenuOption.TAIL_SONARR_LOG.value,
     6: MenuOption.TAIL_WHISPARR_LOG.value,
     7: MenuOption.BACK_TO_FULL_SERVICE.value,
 }
 
-books_menu_options = {
-    1: MenuOption.OPEN_PROWLARR.value,
-    2: MenuOption.OPEN_READARR.value,
-    3: MenuOption.SWITCH_TO_MOVIES.value,
-    4: MenuOption.SWITCH_TO_TV.value,
-    5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
-    6: MenuOption.TAIL_READARR_LOG.value,
-    7: MenuOption.UPDATE_READARR.value,
-    8: MenuOption.QUIT.value,
-}
+
 
 movie_menu_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_RADARR.value,
-    3: MenuOption.SWITCH_TO_BOOKS.value,
-    4: MenuOption.SWITCH_TO_TV.value,
-    5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
-    6: MenuOption.TAIL_RADARR_LOG.value,
-    7: MenuOption.QUIT.value,
+    3: MenuOption.SWITCH_TO_TV.value,
+    4: MenuOption.SWITCH_TO_FULL_SERVICE.value,
+    5: MenuOption.TAIL_RADARR_LOG.value,
+    6: MenuOption.QUIT.value,
 }
 
 tv_menu_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_SONARR.value,
-    3: MenuOption.SWITCH_TO_BOOKS.value,
-    4: MenuOption.SWITCH_TO_MOVIES.value,
-    5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
-    6: MenuOption.TAIL_SONARR_LOG.value,
-    7: MenuOption.QUIT.value,
+    3: MenuOption.SWITCH_TO_MOVIES.value,
+    4: MenuOption.SWITCH_TO_FULL_SERVICE.value,
+    5: MenuOption.TAIL_SONARR_LOG.value,
+    6: MenuOption.QUIT.value,
 }
 
 porn_menu_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_WHISPARR.value,
-    3: MenuOption.SWITCH_TO_BOOKS.value,
-    4: MenuOption.SWITCH_TO_MOVIES.value,
-    5: MenuOption.SWITCH_TO_TV.value,
-    6: MenuOption.SWITCH_TO_FULL_SERVICE.value,
-    7: MenuOption.TAIL_PROWLARR_LOG.value,
-    8: MenuOption.TAIL_WHISPARR_LOG.value,
-    9: MenuOption.QUIT.value,
+    3: MenuOption.SWITCH_TO_MOVIES.value,
+    4: MenuOption.SWITCH_TO_TV.value,
+    5: MenuOption.SWITCH_TO_FULL_SERVICE.value,
+    6: MenuOption.TAIL_PROWLARR_LOG.value,
+    7: MenuOption.TAIL_WHISPARR_LOG.value,
+    8: MenuOption.QUIT.value,
 }
 
 update_menu_options = {
     1: MenuOption.UPDATE_PROWLARR.value,
     2: MenuOption.UPDATE_RADARR.value,
-    3: MenuOption.UPDATE_READARR.value,
+
     4: MenuOption.UPDATE_SONARR.value,
     5: MenuOption.UPDATE_SABNZBD.value,
     6: MenuOption.UPDATE_WHISPARR.value,
@@ -149,8 +136,7 @@ def get_title(service: Service = None):
     name = service.name
     if name == ServiceName.RADARR.value:
         return f"{app_title} Movies"
-    elif name == ServiceName.READARR.value:
-        return f"{app_title} Books"
+
     elif name == ServiceName.SONARR.value:
         return f"{app_title} TV"
     elif name == ServiceName.WHISPARR.value:
@@ -178,8 +164,7 @@ def get_color_for_service(service: Service = None):
     name = service.name
     if name == ServiceName.RADARR.value:
         return "yellow"
-    elif name == ServiceName.READARR.value:
-        return "magenta"
+
     elif name == ServiceName.SONARR.value:
         return "cyan"
     else:
@@ -194,16 +179,7 @@ def handle_option(options, selection, state_manager: StateManager):
         run_full_service(state_manager)
     elif selected_option == MenuOption.BACK_TO_MAIN.value:
         run_main_menu(state_manager)
-    elif selected_option == MenuOption.BOOKS.value:
-        state_manager.set_active_service(state_manager.readarr)
-        start_service(state_manager.readarr)
-        run_books_menu(state_manager)
-    elif selected_option == MenuOption.SWITCH_TO_BOOKS.value:
-        if (active_service is not None):
-            stop_service(active_service)
-        state_manager.set_active_service(state_manager.readarr)
-        start_service(state_manager.readarr)
-        run_books_menu(state_manager)
+
     elif selected_option == MenuOption.MOVIES.value:
         state_manager.set_active_service(state_manager.radarr)
         start_service(state_manager.radarr)
@@ -245,8 +221,7 @@ def handle_option(options, selection, state_manager: StateManager):
         open_ui(state_manager.prowlarr)
     elif selected_option == MenuOption.OPEN_RADARR.value:
         open_ui(state_manager.radarr)
-    elif selected_option == MenuOption.OPEN_READARR.value:
-        open_ui(state_manager.readarr)
+
     elif selected_option == MenuOption.OPEN_SABNZBD.value:
         open_ui(state_manager.sabnzbd)
     elif selected_option == MenuOption.OPEN_SONARR.value:
@@ -270,8 +245,7 @@ def handle_option(options, selection, state_manager: StateManager):
         tail_log(LogPath.PROWLARR.value)
     elif selected_option == MenuOption.TAIL_RADARR_LOG.value:
         tail_log(LogPath.RADARR.value)
-    elif selected_option == MenuOption.TAIL_READARR_LOG.value:
-        tail_log(LogPath.READARR.value)
+
     elif selected_option == MenuOption.TAIL_SABNZBD_LOG.value:
         tail_log(LogPath.SABNZBD.value)
     elif selected_option == MenuOption.TAIL_SONARR_LOG.value:
@@ -284,8 +258,7 @@ def handle_option(options, selection, state_manager: StateManager):
         update_service(state_manager.prowlarr)
     elif selected_option == MenuOption.UPDATE_RADARR.value:
         update_service(state_manager.radarr)
-    elif selected_option == MenuOption.UPDATE_READARR.value:
-        update_service(state_manager.readarr)
+
     elif selected_option == MenuOption.UPDATE_SONARR.value:
         update_service(state_manager.sonarr)
     elif selected_option == MenuOption.UPDATE_SABNZBD.value:
@@ -327,8 +300,7 @@ def run_full_service(state_manager):
     run_menu(full_service_options, handle_option, state_manager)
 
 
-def run_books_menu(state_manager):
-    run_menu(books_menu_options, handle_option, state_manager)
+
 
 
 def run_movies_menu(state_manager):

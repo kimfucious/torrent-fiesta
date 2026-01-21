@@ -6,7 +6,7 @@ docker_compose_project_name = "torrent_fiesta"
 app_root_on_disk = "/Volumes/Pteri/torrent_fiesta"
 app_data_dir = f"{app_root_on_disk}/data"
 app_media_dir = f"{app_data_dir}/media"
-app_media_books_dir = f"{app_media_dir}/books"
+
 app_media_movies_dir = f"{app_media_dir}/movies"
 app_media_tv_dir = f"{app_media_dir}/tv"
 app_torrents_dir = f"{app_data_dir}/torrents"
@@ -15,7 +15,7 @@ app_torrents_dir = f"{app_data_dir}/torrents"
 class LogPath(Enum):
     PROWLARR = f"{app_root_on_disk}/prowlarr/config/logs/prowlarr.txt"
     RADARR = f"{app_root_on_disk}/radarr/config/logs/radarr.txt"
-    READARR = f"{app_root_on_disk}/readarr/config/logs/readarr.txt"
+
     SABNZBD = f"{app_root_on_disk}/sabnzbd/config/logs/sabnzbd.log"
     SONARR = f"{app_root_on_disk}/sonarr/config/logs/sonarr.txt"
     WHISPARR = f"{app_root_on_disk}/whisparr/config/logs/whisparr.txt"
@@ -24,7 +24,7 @@ class LogPath(Enum):
 class ServiceImageUrl(Enum):
     PROWLARR = "lscr.io/linuxserver/prowlarr:latest"
     RADARR = "lscr.io/linuxserver/radarr:latest"
-    READARR = "lscr.io/linuxserver/readarr:develop"
+
     SABNZBD = "lscr.io/linuxserver/sabnzbd:latest" 
     SONARR = "lscr.io/linuxserver/sonarr:latest"
     WHISPARR = "hotio/whisparr:latest"
@@ -33,37 +33,37 @@ class ServiceImageUrl(Enum):
 class MediaPath(Enum):
     MEDIA = f"{app_media_dir}/"
     MOVIES = f"{app_media_movies_dir}/"
-    BOOKS = f"{app_media_books_dir}/"
+
     TV = f"{app_media_tv_dir}/"
 
 
 class MenuOption(Enum):
     BACK_TO_FULL_SERVICE = "Back to Full Service"
     BACK_TO_MAIN = "Back to Main Menu"
-    BOOKS = "(B)ooks"
+
     FULL_SERVICE = "(F)ull Service"
     MOVIES = "(M)ovies"
     OPEN_PROWLARR = "Open (P)rowlarr"
     OPEN_RADARR = "Open (R)adarr"
-    OPEN_READARR = "Open Rea(d)arr"
+
     OPEN_SABNZBD = "Open SABN(Z)BD"
     OPEN_SONARR = "Open (S)onarr"
     OPEN_WHISPARR = "Open Whisparr"
     OPEN_MEDIA = "Open Media"
     OPEN_MEDIA_MOVIES = "Open Media/Movies"
     OPEN_MEDIA_TV = "Open Media/TV"
-    OPEN_MEDIA_BOOKS = "Open Media/Books"
+
     PORN = "Porn"
     QUIT = "(Q)uit"
     RESTART_APP = "Res(t)art App"
     SHOW_LOGS = "Show (L)ogs"
-    SWITCH_TO_BOOKS = "Switch to Books"
+
     SWITCH_TO_FULL_SERVICE = "Switch to Full Service"
     SWITCH_TO_MOVIES = "Switch to Movies"
     SWITCH_TO_TV = "Switch to TV"
     TAIL_PROWLARR_LOG = "Tail Pro(w)larr Log"
     TAIL_RADARR_LOG = "Tail R(a)darr Log"
-    TAIL_READARR_LOG = "Tail R(e)adarr Log"
+
     TAIL_SONARR_LOG = "Tail S(o)narr Log"
     TAIL_SABNZBD_LOG = "Tail SAB(n)zbd Log"
     TAIL_WHISPARR_LOG = "Tail Whisparr Log"
@@ -71,7 +71,7 @@ class MenuOption(Enum):
     UPDATE_APPS = "(U)pdate Apps"
     UPDATE_PROWLARR = "Update Prowlarr"
     UPDATE_RADARR = "Update Radarr"
-    UPDATE_READARR = "Update Readarr"
+
     UPDATE_SABNZBD = "Update SABnzbd"
     UPDATE_SONARR = "Update Sonarr"
     UPDATE_WHISPARR = "Update Whisparr"
@@ -80,7 +80,7 @@ class MenuOption(Enum):
 class ComposeDirectory(Enum):
     FULL_SERVICE = "full_service"
     RADARR = "movies"
-    READARR = "books"
+
     SONARR = "tv"
     WHISPARR = "porn"
 
@@ -89,7 +89,7 @@ class FriendlyName(Enum):
     FULL_SERVICE = "Full Service"
     PROWLARR = "Prowlarr"
     RADARR = "Radarr"
-    READARR = "Readarr"
+
     SONARR = "Sonarr"
     SABNZBD = "SABnzbd"
     WHISPARR = "Whisparr"
@@ -99,7 +99,7 @@ class ServiceName(Enum):
     FULL_SERVICE = "full_service"
     PROWLARR = "prowlarr"
     RADARR = "radarr"
-    READARR = "readarr"
+
     SONARR = "sonarr"
     SABNZBD = "sabnzbd"
     WHISPARR = "whisparr"
@@ -108,7 +108,7 @@ class ServiceName(Enum):
 class ServiceUiUrl(Enum):
     PROWLARR = "http://localhost:9696"
     RADARR = "http://localhost:7878"
-    READARR = "http://localhost:8787"
+
     SONARR = "http://localhost:8989"
     SABNZBD = "http://localhost:8080"
     WHISPARR = "http://localhost:6969"
@@ -157,15 +157,7 @@ class StateManager:
         MediaPath.MOVIES.value,
         ServiceUiUrl.RADARR.value,
     )
-    readarr = Service(
-        ServiceName.READARR.value,
-        FriendlyName.READARR.value,
-        ServiceImageUrl.READARR.value,
-        ComposeDirectory.READARR.value,
-        LogPath.READARR,
-        MediaPath.BOOKS.value,
-        ServiceUiUrl.READARR.value,
-    )
+
     sabnzbd = Service(
         ServiceName.SABNZBD.value,
         FriendlyName.SABNZBD.value,

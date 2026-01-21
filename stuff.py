@@ -258,7 +258,7 @@ def stop_service(service: Service = None):
     if service_name == ServiceName.FULL_SERVICE.value:
         close_ui(ServiceName.PROWLARR.value)
         close_ui(ServiceName.RADARR.value)
-        close_ui(ServiceName.READARR.value)
+
         close_ui(ServiceName.SABNZBD.value)
         close_ui(ServiceName.SONARR.value)
         close_ui(ServiceName.WHISPARR.value)
