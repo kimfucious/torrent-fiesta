@@ -62,7 +62,6 @@ Create a folder structure like this on your local machine:
 .
 ├── data
 │   ├── media # Servarr apps import files to here
-
 │   │   ├── movies # Radarr
 │   │   ├── music # Lidarr
 │   │   └── tv # Sonarr
@@ -86,8 +85,6 @@ Create a folder structure like this on your local machine:
 ├── prowlarr
 │   └── config
 ├── radarr
-│   └── config
-
 │   └── config
 ├── sabnzbd
 │   └── config
@@ -146,8 +143,6 @@ This should be fairly intuitive, but here's a few clarifications:
 ### Transmission
 
 At present, this project is setup to use Transmission installed locally on your machine (not in a Docker container).
-
-
 
 ### SABnzbs
 
@@ -236,6 +231,9 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
     -   For Local Path, select `/data/torrents/movies/`
 
 
+### Readarr 
+
+- [Readarr has been retired](https://readarr.com/) and is no longer a part of Torrent Fiesta.
 
 ### Sonarr Setup
 
