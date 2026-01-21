@@ -50,36 +50,33 @@ alpha_menu_options = {
 }
 
 main_menu_options = {
-
-    2: MenuOption.MOVIES.value,
-    3: MenuOption.TV_SHOWS.value,
-    4: MenuOption.FULL_SERVICE.value,
-    5: MenuOption.RESTART_APP.value,
-    6: MenuOption.UPDATE_APPS.value,
-    7: MenuOption.QUIT.value,
+    1: MenuOption.MOVIES.value,
+    2: MenuOption.TV_SHOWS.value,
+    3: MenuOption.FULL_SERVICE.value,
+    4: MenuOption.RESTART_APP.value,
+    5: MenuOption.UPDATE_APPS.value,
+    6: MenuOption.QUIT.value,
 }
 
 full_service_options = {
     1: MenuOption.OPEN_PROWLARR.value,
     2: MenuOption.OPEN_SABNZBD.value,
     3: MenuOption.OPEN_RADARR.value,
-
-    5: MenuOption.OPEN_SONARR.value,
-    6: MenuOption.OPEN_WHISPARR.value,
-    7: MenuOption.OPEN_MEDIA.value,
-    8: MenuOption.SHOW_LOGS.value,
-    9: MenuOption.RESTART_APP.value,
-    10: MenuOption.QUIT.value,
+    4: MenuOption.OPEN_SONARR.value,
+    5: MenuOption.OPEN_WHISPARR.value,
+    6: MenuOption.OPEN_MEDIA.value,
+    7: MenuOption.SHOW_LOGS.value,
+    8: MenuOption.RESTART_APP.value,
+    9: MenuOption.QUIT.value,
 }
 
 log_menu_options = {
     1: MenuOption.TAIL_PROWLARR_LOG.value,
     2: MenuOption.TAIL_RADARR_LOG.value,
-
-    4: MenuOption.TAIL_SABNZBD_LOG.value,
-    5: MenuOption.TAIL_SONARR_LOG.value,
-    6: MenuOption.TAIL_WHISPARR_LOG.value,
-    7: MenuOption.BACK_TO_FULL_SERVICE.value,
+    3: MenuOption.TAIL_SABNZBD_LOG.value,
+    4: MenuOption.TAIL_SONARR_LOG.value,
+    5: MenuOption.TAIL_WHISPARR_LOG.value,
+    6: MenuOption.BACK_TO_FULL_SERVICE.value,
 }
 
 
@@ -116,11 +113,10 @@ porn_menu_options = {
 update_menu_options = {
     1: MenuOption.UPDATE_PROWLARR.value,
     2: MenuOption.UPDATE_RADARR.value,
-
-    4: MenuOption.UPDATE_SONARR.value,
-    5: MenuOption.UPDATE_SABNZBD.value,
-    6: MenuOption.UPDATE_WHISPARR.value,
-    7: MenuOption.BACK_TO_MAIN.value,
+    3: MenuOption.UPDATE_SONARR.value,
+    4: MenuOption.UPDATE_SABNZBD.value,
+    5: MenuOption.UPDATE_WHISPARR.value,
+    6: MenuOption.BACK_TO_MAIN.value,
 }
 
 
