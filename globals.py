@@ -23,7 +23,7 @@ class LogPath(Enum):
 class ServiceImageUrl(Enum):
     PROWLARR = "lscr.io/linuxserver/prowlarr:latest"
     RADARR = "lscr.io/linuxserver/radarr:latest"
-    SABNZBD = "lscr.io/linuxserver/sabnzbd:latest" 
+    SABNZBD = "lscr.io/linuxserver/sabnzbd:latest"
     SONARR = "lscr.io/linuxserver/sonarr:latest"
     WHISPARR = "ghcr.io/hotio/whisparr:v3"
 
