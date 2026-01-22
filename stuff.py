@@ -8,7 +8,7 @@ import time
 
 
 def is_docker_running():
-    result = subprocess.run(shlex.split("pgrep Docker"),
+    result = subprocess.run(shlex.split("pgrep -f 'Docker Desktop'"),
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return result.returncode == 0
 
@@ -19,7 +19,7 @@ def is_transmission_running():
     return result.returncode == 0
 
 
-def start_docker():
+def start_dockerOrig():
     if not is_docker_running():
         spinner = Halo(text="Starting Docker...", spinner="dots")
         spinner.start()
@@ -28,6 +28,24 @@ def start_docker():
         while not is_docker_running():
             continue
         spinner.succeed("Docker started successfully!")
+
+
+def start_docker():
+    # Check if the engine is responsive to commands
+    while True:
+        if subprocess.run(["docker", "info"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+            return
+
+        # Use os.system directly to avoid circular import with helpers
+        os.system("clear")
+        print(colored("Docker Desktop is not running.", "red"))
+        print("\nPlease start Docker Desktop manually to continue, or press 'q' to quit.")
+        
+        choice = input("\n[r] Retry check | [q] Quit: ").lower()
+        
+        if choice == 'q':
+            from helpers import quit_app
+            quit_app()
 
 
 def start_transmission():
