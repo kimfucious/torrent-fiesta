@@ -15,7 +15,6 @@ app_torrents_dir = f"{app_data_dir}/torrents"
 class LogPath(Enum):
     PROWLARR = f"{app_root_on_disk}/prowlarr/config/logs/prowlarr.txt"
     RADARR = f"{app_root_on_disk}/radarr/config/logs/radarr.txt"
-
     SABNZBD = f"{app_root_on_disk}/sabnzbd/config/logs/sabnzbd.log"
     SONARR = f"{app_root_on_disk}/sonarr/config/logs/sonarr.txt"
     WHISPARR = f"{app_root_on_disk}/whisparr/config/logs/whisparr.txt"
@@ -24,16 +23,14 @@ class LogPath(Enum):
 class ServiceImageUrl(Enum):
     PROWLARR = "lscr.io/linuxserver/prowlarr:latest"
     RADARR = "lscr.io/linuxserver/radarr:latest"
-
     SABNZBD = "lscr.io/linuxserver/sabnzbd:latest" 
     SONARR = "lscr.io/linuxserver/sonarr:latest"
-    WHISPARR = "hotio/whisparr:latest"
+    WHISPARR = "ghcr.io/hotio/whisparr:v3"
 
 
 class MediaPath(Enum):
     MEDIA = f"{app_media_dir}/"
     MOVIES = f"{app_media_movies_dir}/"
-
     TV = f"{app_media_tv_dir}/"
 
 
@@ -71,7 +68,6 @@ class MenuOption(Enum):
     UPDATE_APPS = "(U)pdate Apps"
     UPDATE_PROWLARR = "Update Prowlarr"
     UPDATE_RADARR = "Update Radarr"
-
     UPDATE_SABNZBD = "Update SABnzbd"
     UPDATE_SONARR = "Update Sonarr"
     UPDATE_WHISPARR = "Update Whisparr"
@@ -80,7 +76,6 @@ class MenuOption(Enum):
 class ComposeDirectory(Enum):
     FULL_SERVICE = "full_service"
     RADARR = "movies"
-
     SONARR = "tv"
     WHISPARR = "porn"
 
@@ -89,7 +84,6 @@ class FriendlyName(Enum):
     FULL_SERVICE = "Full Service"
     PROWLARR = "Prowlarr"
     RADARR = "Radarr"
-
     SONARR = "Sonarr"
     SABNZBD = "SABnzbd"
     WHISPARR = "Whisparr"
@@ -99,7 +93,6 @@ class ServiceName(Enum):
     FULL_SERVICE = "full_service"
     PROWLARR = "prowlarr"
     RADARR = "radarr"
-
     SONARR = "sonarr"
     SABNZBD = "sabnzbd"
     WHISPARR = "whisparr"
@@ -108,7 +101,6 @@ class ServiceName(Enum):
 class ServiceUiUrl(Enum):
     PROWLARR = "http://localhost:9696"
     RADARR = "http://localhost:7878"
-
     SONARR = "http://localhost:8989"
     SABNZBD = "http://localhost:8080"
     WHISPARR = "http://localhost:6969"
