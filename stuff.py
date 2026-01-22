@@ -33,13 +33,19 @@ def start_dockerOrig():
 def start_docker():
     # Check if the engine is responsive to commands
     while True:
-        if subprocess.run(["docker", "info"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+        result = subprocess.run(
+            ["docker", "info"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        if result.returncode == 0:
             return
 
         # Use os.system directly to avoid circular import with helpers
         os.system("clear")
         print(colored("Docker Desktop is not running.", "red"))
-        print("\nPlease start Docker Desktop manually to continue, or press 'q' to quit.")
+        print("\nPlease start Docker Desktop manually to continue, or "
+              "press 'q' to quit.")
         
         choice = input("\n[r] Retry check | [q] Quit: ").lower()
         
