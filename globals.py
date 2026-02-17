@@ -1,23 +1,26 @@
 from enum import Enum
+import os
+
+from settings import SETTINGS
 
 app_title = "Torrent Fiesta"
 docker_compose_project_name = "torrent_fiesta"
 
-app_root_on_disk = "/Volumes/Pteri/torrent_fiesta"
-app_data_dir = f"{app_root_on_disk}/data"
-app_media_dir = f"{app_data_dir}/media"
+app_root_on_disk = os.path.normpath(SETTINGS.tf_root)
+app_data_dir = os.path.join(app_root_on_disk, "data")
+app_media_dir = os.path.join(app_data_dir, "media")
 
-app_media_movies_dir = f"{app_media_dir}/movies"
-app_media_tv_dir = f"{app_media_dir}/tv"
-app_torrents_dir = f"{app_data_dir}/torrents"
+app_media_movies_dir = os.path.join(app_media_dir, "movies")
+app_media_tv_dir = os.path.join(app_media_dir, "tv")
+app_torrents_dir = os.path.join(app_data_dir, "torrents")
 
 
 class LogPath(Enum):
-    PROWLARR = f"{app_root_on_disk}/prowlarr/config/logs/prowlarr.txt"
-    RADARR = f"{app_root_on_disk}/radarr/config/logs/radarr.txt"
-    SABNZBD = f"{app_root_on_disk}/sabnzbd/config/logs/sabnzbd.log"
-    SONARR = f"{app_root_on_disk}/sonarr/config/logs/sonarr.txt"
-    WHISPARR = f"{app_root_on_disk}/whisparr/config/logs/whisparr.txt"
+    PROWLARR = os.path.join(app_root_on_disk, "prowlarr", "config", "logs", "prowlarr.txt")
+    RADARR = os.path.join(app_root_on_disk, "radarr", "config", "logs", "radarr.txt")
+    SABNZBD = os.path.join(app_root_on_disk, "sabnzbd", "config", "logs", "sabnzbd.log")
+    SONARR = os.path.join(app_root_on_disk, "sonarr", "config", "logs", "sonarr.txt")
+    WHISPARR = os.path.join(app_root_on_disk, "whisparr", "config", "logs", "whisparr.txt")
 
 
 class ServiceImageUrl(Enum):
@@ -29,9 +32,9 @@ class ServiceImageUrl(Enum):
 
 
 class MediaPath(Enum):
-    MEDIA = f"{app_media_dir}/"
-    MOVIES = f"{app_media_movies_dir}/"
-    TV = f"{app_media_tv_dir}/"
+    MEDIA = app_media_dir
+    MOVIES = app_media_movies_dir
+    TV = app_media_tv_dir
 
 
 class MenuOption(Enum):

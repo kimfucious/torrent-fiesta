@@ -5,14 +5,11 @@ services:
         ports:
             - "8989:8989"
         environment:
-            - PUID=1000
-            - PGID=1000
-            # - PUID=502 # Use a User ID that has permissions on the volumes below
-            # - PGID=20 # Use a Group ID that has permissions on the volumes below
-            # - UMASK=002
-            - TZ=Asia/Bangkok # User your timezone or UTC
+            - PUID=${TF_PUID:-1000}
+            - PGID=${TF_PGID:-1000}
+            - TZ=${TF_TZ:-UTC}
         volumes:
-            - /Volumes/Pteri/torrent_fiesta/sonarr/config:/config
-            - /Volumes/Pteri/torrent_fiesta/data:/data
-            - /Volumes/Pteri/torrent_fiesta/data/torrents:/data/torrents
-            - /Volumes/Pteri/Torrents/SonarrTV:/imports
+            - ${TF_ROOT}/sonarr/config:/config
+            - ${TF_ROOT}/data:/data
+            - ${TF_ROOT}/data/torrents:/data/torrents
+            - ${TF_ROOT}/imports/sonarr_tv:/imports

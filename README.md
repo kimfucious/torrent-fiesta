@@ -2,7 +2,7 @@
 
 This is a project to simplify running [Servarr](https://wiki.servarr.com/) apps in Docker containers.
 
-All of this was created to run on a Mac and the documentation herein is macOS centric. If you're on another platform, some things just won't work.
+This project runs on macOS and Windows with Docker Desktop.
 
 At present, [Lidarr](https://wiki.servarr.com/en/lidarr) and [Whisparr](https://wiki.servarr.com/en/whisparr) are not implemented.
 
@@ -25,7 +25,7 @@ Same goes for SABnzbd[https://sabnzbd.org/], which this project uses as a Usenet
 
 ### Docker
 
--   If not already installed, install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/).
+-   If not already installed, install [Docker Desktop](https://docs.docker.com/desktop/).
 
 Docker is used to run the Servarr and SABnzbd apps in containers. The Compose files are located in the docker directory at the root level of this project.
 
@@ -37,8 +37,8 @@ If you don't want a specific Servarr app to run in Full Service, edit the `/dock
 
 ### Python
 
--   Install Python 3 and pip (I use [Homebrew](https://docs.brew.sh/Homebrew-and-Python)).
--   In terminal, navigate to the root of this project and run the following commands to install dependencies in an isolated environment:
+-   Install Python 3 and pip.
+-   In terminal, navigate to the root of this project and run the following commands to install dependencies in an isolated environment.
 
 ```console
 > python3 -m venv .venv
@@ -47,6 +47,14 @@ If you don't want a specific Servarr app to run in Full Service, edit the `/dock
 ```
 
 **NOTE:** The `.venv` directory and its subdirectories are excluded in `.gitignore`.
+
+Windows PowerShell equivalent:
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+py -3 -m pip install -r requirements.txt
+```
 
 ### Folder Structure
 
@@ -94,14 +102,12 @@ Create a folder structure like this on your local machine:
     └── config
 ```
 
-I have this structure in a directory called `torrent_fiesta` on `/Volumes/Pteri`.
-
-`/Volumes/Pteri` is a USB attached drive on _my machine_.
-
 Be sure to:
 
-1.   Use what's appropriate for your environment and update the `volumes` sections in the Docker compose files in the `docker/xarr` and `docker/nzb` directories accordingly.
-2.   Update the `app_root_on_disk` value in `global.py` to match your environment.
+1.   Copy `.env.example` to `.env` at the project root.
+2.   Set `TF_ROOT` to your host path (example on Windows: `C:/torrent_fiesta`).
+3.   Set `TF_TZ` to your timezone.
+4.   Optionally set `TF_TRANSMISSION_EXE` on Windows if Transmission is installed in a non-default location.
 
 **NOTE:** The apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to fiddle with `PUID`, `PGID`, and `UNMASK` settings in the Docker Compose files.
 
@@ -111,6 +117,12 @@ Run the following **at the root level** of this project to start the app:
 
 ```shell
 source .venv/bin/activate
+```
+
+or on Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
 ```
 
 **NOTE:** This needs to be run to activate the environment setup in [Python](#python) in any new shell instance.
@@ -127,6 +139,26 @@ alias tfiesta="cd ~/projects/torrent-fiesta && source .venv/bin/activate && pyth
 
 Either of these wll launch the app and attempt to start Docker and Transmission if they are not running, after which the CLI menu is presented.
 
+### Runtime Options
+
+Set these in `.env`:
+
+- `TF_BROWSER_MODE=default|chrome` (`default` uses your system browser)
+- `TF_ENABLE_UI_CLOSE=true|false` (attempts closing app tabs on quit when supported)
+- `TF_TRANSMISSION_MODE=auto|manual`
+- `TF_TRANSMISSION_EXE` (optional explicit Windows path to `transmission-qt.exe`)
+
+## Compose Commands (No CLI)
+
+You can run services directly with Docker Compose:
+
+```shell
+docker compose -p torrent_fiesta -f docker/services/movies/compose.yaml up -d
+docker compose -p torrent_fiesta -f docker/services/tv/compose.yaml up -d
+docker compose -p torrent_fiesta -f docker/services/full_service/compose.yaml up -d
+docker compose -p torrent_fiesta down
+```
+
 ## The CLI Menu
 
 This should be fairly intuitive, but here's a few clarifications:
@@ -142,7 +174,11 @@ This should be fairly intuitive, but here's a few clarifications:
 
 ### Transmission
 
-At present, this project is setup to use Transmission installed locally on your machine (not in a Docker container).
+This project is setup to use Transmission installed locally on your machine (not in a Docker container).
+
+- By default (`TF_TRANSMISSION_MODE=auto`), Torrent Fiesta attempts to start Transmission.
+- If auto-start fails, Torrent Fiesta prompts you to start it manually and retry.
+- If you prefer manual mode, set `TF_TRANSMISSION_MODE=manual`.
 
 ### SABnzbs
 
@@ -222,12 +258,12 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
 
 -   Click the + and select Transmission
     -   Enter your IP address in the Host field (e.g. 192.168.1.101)
-    -   Set `Directory` to your equivalent of `/Volumes/Pteri/torrent_fiesta/data/torrents/movies`
+    -   Set `Directory` to your equivalent of `<TF_ROOT>/data/torrents/movies`
         -   This overrides the settings in the Bittorrent client and puts the downloads where Radarr can find and import them.
     -   Test and Save
 -   Under Remote Path Mappings, click the +
     -   Select your IP address in the Host field (e.g. 192.168.1.101)
-    -   For Remote Path, enter your equivalent to `/Volumes/Pteri/torrent_fiesta/data/torrents/movies/`
+    -   For Remote Path, enter your equivalent to `<TF_ROOT>/data/torrents/movies/`
     -   For Local Path, select `/data/torrents/movies/`
 
 
@@ -259,12 +295,12 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
 
 -   Click the + and select Transmission
     -   Enter your IP address in the Host field (e.g. 192.168.1.101)
-    -   Set `Directory` to your equivalent of `/Volumes/Pteri/torrent_fiesta/data/torrents/tv`
+    -   Set `Directory` to your equivalent of `<TF_ROOT>/data/torrents/tv`
         -   This overrides the settings in the Bittorrent client and puts the downloads where Sonarr can find and import them.
     -   Test and Save
 -   Under Remote Path Mappings, click the +
     -   Select your IP address in the Host field (e.g. 192.168.1.101)
-    -   For Remote Path, enter your equivalent to `/Volumes/Pteri/torrent_fiesta/data/torrents/tv/`
+    -   For Remote Path, enter your equivalent to `<TF_ROOT>/data/torrents/tv/`
     -   For Local Path, select `/data/torrents/tv/`
 
 ## Issues
@@ -276,6 +312,8 @@ Each NAB indexer you add to Prowlarr will need an API Key provided once you sign
     -   Interactive search can sometimes yield better results.
     -   Setting the Minimum Seeders value in Prowler => Apps => Sync Profiles may yield better results.
 -   Opening Media locations does not bring Finder to the foreground, unless a window is already opened to the path and it has been minimized (I think that's the case). Not a big deal, but weird.
+-   Browser tab close automation is fully supported on macOS with Chrome mode (`TF_BROWSER_MODE=chrome`).
+-   On Windows, URL opening is supported. Chrome tab close is best-effort and may leave tabs open.
 -   Not sure if this is true yet, but it appears that if single Servarr service is chosen (e.g. Sonarr), rather than Full Service, Prowlarr will fail due to inability to connect to non-started Apps. This will affect the chosen app and cause searches to fail.
     -   Workaround 1: Separate Prowlarr configs
     -   Workaround 2: Get rid of individual Servarr options and only use Full Service

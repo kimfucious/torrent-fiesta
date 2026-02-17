@@ -2,10 +2,11 @@ from art import text2art
 from halo import Halo
 from globals import (Service, ServiceName)
 from stuff import (close_ui, stop_docker_compose)
+from platform_adapter import clear_screen as platform_clear_screen
+from platform_adapter import open_folder
 from termcolor import colored
 import os
 import random
-import subprocess
 import sys
 import time
 import termios  # For Unix-based systems
@@ -13,12 +14,7 @@ import tty  # For Unix-based systems
 
 
 def clear_screen():
-    # For Windows
-    if os.name == "nt":
-        os.system("cls")
-    # For macOS and Linux
-    else:
-        os.system("clear")
+    platform_clear_screen()
     return
 
 
@@ -28,24 +24,10 @@ def get_color():
 
 
 def open_location(service: Service):
-    try:
-        if service is None or service.media_path is None:
-            return
+    if service is None or service.media_path is None:
+        return
 
-        path = service.media_path
-
-        subprocess.run([
-            'open',
-            '-a',
-            'Finder',
-            path
-        ])
-        applescript = 'tell application "Finder" to activate'
-        # This doesn't bring Finder to the front
-        subprocess.run(['osascript', '-e', applescript])
-
-    except FileNotFoundError:
-        print("Error: Finder not found. Could not open location.")
+    open_folder(service.media_path)
 
 
 def print_ascii_art(text, color):

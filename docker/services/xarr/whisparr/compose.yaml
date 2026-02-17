@@ -5,13 +5,10 @@ services:
         ports:
             - "6969:6969"
         environment:
-            - PUID=1000
-            - PGID=1000
-            # - PUID=502 # Use a User ID that has permissions on the volumes below
-            # - PGID=20 # Use a Group ID that has permissions on the volumes below
-            # - UMASK=002
-            - TZ=Asia/Bangkok # User your timezone or UTC
+            - PUID=${TF_PUID:-1000}
+            - PGID=${TF_PGID:-1000}
+            - TZ=${TF_TZ:-UTC}
         volumes:
-            - /Volumes/Pteri/torrent_fiesta/whisparr/config:/config
-            - /Volumes/Pteri/torrent_fiesta/data:/data
-            - /Volumes/Pteri/torrent_fiesta/data/torrents:/data/torrents
+            - ${TF_ROOT}/whisparr/config:/config
+            - ${TF_ROOT}/data:/data
+            - ${TF_ROOT}/data/torrents:/data/torrents
