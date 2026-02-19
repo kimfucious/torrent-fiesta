@@ -9,7 +9,7 @@ services:
             - PGID=${TF_PGID:-1000}
             - TZ=${TF_TZ:-UTC}
         volumes:
-            - ${TF_ROOT}/sonarr/config:/config
-            - ${TF_ROOT}/data:/data
-            - ${TF_ROOT}/data/torrents:/data/torrents
-            - ${TF_ROOT}/imports/sonarr_tv:/imports
+            - ${TF_CONFIG_DIR:-${TF_ROOT}}/sonarr/config:/config
+            - ${TF_DATA_DIR:-${TF_ROOT}/data}:/data
+            - ${TF_DATA_DIR:-${TF_ROOT}/data}/torrents:/data/torrents
+            - ${TF_IMPORTS_DIR:-${TF_ROOT}/imports}/sonarr_tv:/imports

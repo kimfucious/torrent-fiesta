@@ -7,7 +7,7 @@ services:
             - PGID=${TF_PGID:-1000}
             - TZ=${TF_TZ:-UTC}
         volumes:
-            - ${TF_ROOT}/prowlarr/config:/config
+            - ${TF_CONFIG_DIR:-${TF_ROOT}}/prowlarr/config:/config
         ports:
             - 9696:9696
         restart: unless-stopped

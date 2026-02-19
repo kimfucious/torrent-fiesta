@@ -107,8 +107,26 @@ Be sure to:
 
 1.   Copy `.env.example` to `.env` at the project root.
 2.   Set `TF_ROOT` to your host path (example on Windows: `C:/torrent_fiesta`).
-3.   Set `TF_TZ` to your timezone.
-4.   Optionally set `TF_TRANSMISSION_EXE` on Windows if Transmission is installed in a non-default location.
+3.   Optionally override paths:
+     - `TF_DATA_DIR` (defaults to `<TF_ROOT>/data`)
+     - `TF_CONFIG_DIR` (defaults to `<TF_ROOT>`)
+     - `TF_IMPORTS_DIR` (defaults to `<TF_ROOT>/imports`)
+4.   Set `TF_TZ` to your timezone.
+5.   Optionally set `TF_TRANSMISSION_EXE` on Windows if Transmission is installed in a non-default location.
+
+You can create this structure automatically with scripts in `scripts/`:
+
+macOS/Linux shell:
+
+```shell
+./scripts/create_structure_macos.sh /Volumes/Pteri/torrent_fiesta
+```
+
+Windows PowerShell:
+
+```powershell
+.\scripts\create_structure_windows.ps1 -RootPath C:/torrent_fiesta
+```
 
 **NOTE:** The apps running in Docker containers will need access to these directories. Pay attention to `Remote Path Mappings` in the individual [Servarr app](#servarr-apps) sections below and you should not have to fiddle with `PUID`, `PGID`, and `UNMASK` settings in the Docker Compose files.
 
@@ -155,6 +173,9 @@ Set these in `.env`:
 - `TF_ENABLE_UI_CLOSE=true|false` (attempts closing app tabs on quit when supported)
 - `TF_TRANSMISSION_MODE=auto|manual`
 - `TF_TRANSMISSION_EXE` (optional explicit Windows path to `transmission-qt.exe`)
+- `TF_DATA_DIR` (optional, default: `<TF_ROOT>/data`)
+- `TF_CONFIG_DIR` (optional, default: `<TF_ROOT>`)
+- `TF_IMPORTS_DIR` (optional, default: `<TF_ROOT>/imports`)
 
 ## Compose Commands (No CLI)
 

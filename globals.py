@@ -7,7 +7,7 @@ app_title = "Torrent Fiesta"
 docker_compose_project_name = "torrent_fiesta"
 
 app_root_on_disk = os.path.normpath(SETTINGS.tf_root)
-app_data_dir = os.path.join(app_root_on_disk, "data")
+app_data_dir = os.path.normpath(SETTINGS.tf_data_dir)
 app_media_dir = os.path.join(app_data_dir, "media")
 
 app_media_movies_dir = os.path.join(app_media_dir, "movies")
@@ -16,11 +16,11 @@ app_torrents_dir = os.path.join(app_data_dir, "torrents")
 
 
 class LogPath(Enum):
-    PROWLARR = os.path.join(app_root_on_disk, "prowlarr", "config", "logs", "prowlarr.txt")
-    RADARR = os.path.join(app_root_on_disk, "radarr", "config", "logs", "radarr.txt")
-    SABNZBD = os.path.join(app_root_on_disk, "sabnzbd", "config", "logs", "sabnzbd.log")
-    SONARR = os.path.join(app_root_on_disk, "sonarr", "config", "logs", "sonarr.txt")
-    WHISPARR = os.path.join(app_root_on_disk, "whisparr", "config", "logs", "whisparr.txt")
+    PROWLARR = os.path.join(SETTINGS.tf_config_dir, "prowlarr", "config", "logs", "prowlarr.txt")
+    RADARR = os.path.join(SETTINGS.tf_config_dir, "radarr", "config", "logs", "radarr.txt")
+    SABNZBD = os.path.join(SETTINGS.tf_config_dir, "sabnzbd", "config", "logs", "sabnzbd.log")
+    SONARR = os.path.join(SETTINGS.tf_config_dir, "sonarr", "config", "logs", "sonarr.txt")
+    WHISPARR = os.path.join(SETTINGS.tf_config_dir, "whisparr", "config", "logs", "whisparr.txt")
 
 
 class ServiceImageUrl(Enum):

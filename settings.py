@@ -43,6 +43,9 @@ def _load_dotenv(dotenv_path: Path) -> None:
 @dataclass(frozen=True)
 class RuntimeSettings:
     tf_root: str
+    tf_data_dir: str
+    tf_config_dir: str
+    tf_imports_dir: str
     tf_tz: str
     tf_browser_mode: str
     tf_enable_ui_close: bool
@@ -65,8 +68,16 @@ def load_settings() -> RuntimeSettings:
     if transmission_mode not in {"auto", "manual"}:
         transmission_mode = DEFAULT_TF_TRANSMISSION_MODE
 
+    tf_root = os.getenv("TF_ROOT", DEFAULT_TF_ROOT).strip()
+    tf_data_dir = os.getenv("TF_DATA_DIR", os.path.join(tf_root, "data")).strip()
+    tf_config_dir = os.getenv("TF_CONFIG_DIR", tf_root).strip()
+    tf_imports_dir = os.getenv("TF_IMPORTS_DIR", os.path.join(tf_root, "imports")).strip()
+
     return RuntimeSettings(
-        tf_root=os.getenv("TF_ROOT", DEFAULT_TF_ROOT).strip(),
+        tf_root=tf_root,
+        tf_data_dir=tf_data_dir,
+        tf_config_dir=tf_config_dir,
+        tf_imports_dir=tf_imports_dir,
         tf_tz=os.getenv("TF_TZ", DEFAULT_TF_TZ).strip(),
         tf_browser_mode=browser_mode,
         tf_enable_ui_close=_to_bool(
@@ -83,6 +94,9 @@ SETTINGS = load_settings()
 def docker_runtime_env() -> dict:
     env = os.environ.copy()
     env.setdefault("TF_ROOT", SETTINGS.tf_root)
+    env.setdefault("TF_DATA_DIR", SETTINGS.tf_data_dir)
+    env.setdefault("TF_CONFIG_DIR", SETTINGS.tf_config_dir)
+    env.setdefault("TF_IMPORTS_DIR", SETTINGS.tf_imports_dir)
     env.setdefault("TF_TZ", SETTINGS.tf_tz)
     env.setdefault("TF_PUID", env.get("TF_PUID", "1000"))
     env.setdefault("TF_PGID", env.get("TF_PGID", "1000"))
