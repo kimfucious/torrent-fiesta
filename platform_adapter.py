@@ -33,6 +33,16 @@ def open_url(url: str) -> None:
     if not url:
         return
 
+    if is_windows() and SETTINGS.tf_browser_mode == "chrome":
+        chrome_candidates = [
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        ]
+        for candidate in chrome_candidates:
+            if Path(candidate).exists():
+                subprocess.run([candidate, url], check=False)
+                return
+
     if not is_windows() and SETTINGS.tf_browser_mode == "chrome":
         subprocess.run(["open", "-a", "Google Chrome", url], check=False)
         return

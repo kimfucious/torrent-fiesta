@@ -9,8 +9,6 @@ import os
 import random
 import sys
 import time
-import termios  # For Unix-based systems
-import tty  # For Unix-based systems
 
 
 def clear_screen():
@@ -60,6 +58,9 @@ def wait_for_keypress():
         _ = msvcrt.getch()
     except ImportError:
         # Fall back to tty for Unix-based systems
+        import termios
+        import tty
+
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:

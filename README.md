@@ -3,6 +3,7 @@
 This is a project to simplify running [Servarr](https://wiki.servarr.com/) apps in Docker containers.
 
 This project runs on macOS and Windows with Docker Desktop.
+Windows support is for native Python on Windows (PowerShell/CMD), not WSL.
 
 At present, [Lidarr](https://wiki.servarr.com/en/lidarr) and [Whisparr](https://wiki.servarr.com/en/whisparr) are not implemented.
 
@@ -51,9 +52,9 @@ If you don't want a specific Servarr app to run in Full Service, edit the `/dock
 Windows PowerShell equivalent:
 
 ```powershell
-py -3 -m venv .venv
+python -m venv .venv
 .venv\Scripts\Activate.ps1
-py -3 -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ### Folder Structure
@@ -131,6 +132,12 @@ or on Windows PowerShell:
 python3 main.py
 ```
 
+or on Windows PowerShell:
+
+```powershell
+python main.py
+```
+
 or&mdash;better&mdash;create an alias like this and run it:
 
 ```shell
@@ -144,6 +151,7 @@ Either of these wll launch the app and attempt to start Docker and Transmission 
 Set these in `.env`:
 
 - `TF_BROWSER_MODE=default|chrome` (`default` uses your system browser)
+- Recommended on Windows for this app's tab workflow: `TF_BROWSER_MODE=chrome`
 - `TF_ENABLE_UI_CLOSE=true|false` (attempts closing app tabs on quit when supported)
 - `TF_TRANSMISSION_MODE=auto|manual`
 - `TF_TRANSMISSION_EXE` (optional explicit Windows path to `transmission-qt.exe`)
