@@ -9,7 +9,12 @@ if ([string]::IsNullOrWhiteSpace($RootPath)) {
     exit 1
 }
 
-$root = $RootPath.TrimEnd('/', '\\')
+$trimChars = [char[]]@('/', '\')
+$root = $RootPath.TrimEnd($trimChars)
+if ([string]::IsNullOrWhiteSpace($root)) {
+    Write-Host "RootPath resolved to an empty value after trimming. Please provide a valid path." -ForegroundColor Red
+    exit 1
+}
 $dirs = @(
     "data/media/movies",
     "data/media/music",
